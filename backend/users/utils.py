@@ -44,16 +44,16 @@ def get_payload_from_token(token):
                       algorithms=jwt_settings['ALGORITHM'])
 
 
-def get_username_from_payload(payload):
+def get_email_from_payload(payload):
     return payload.get(settings.SIMPLE_JWT['USER_ID_CLAIM'], None)
 
 
-def get_username_from_token(token):
+def get_email_from_token(token):
     if not token:
         raise AuthenticationFailed('Invalid token')
     payload = get_payload_from_token(token)
-    username = get_username_from_payload(payload)
-    return username
+    email = get_email_from_payload(payload)
+    return email
 
 
 def get_user_data(user):
