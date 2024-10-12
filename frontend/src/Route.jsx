@@ -1,8 +1,12 @@
 import React from 'react';
+import Container from '@mui/material/Container';
+import Login from './authentication/Login';
 
 const Route = () => {
   return (
-    <div></div>
+    <Container maxWidth={false} disableGutters>
+      <Login />
+    </Container>
   )
 }
 
