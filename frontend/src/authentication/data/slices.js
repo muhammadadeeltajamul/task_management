@@ -36,12 +36,17 @@ const userSlice = createSlice({
       ...state,
       status: RequestStatus.DENIED,
       errorMessage: payload.message,
+    }),
+    userAuthenticationInProgress: (state, { payload }) => ({
+      ...state,
+      status: RequestStatus.IN_PROGRESS,
     })
   }
 });
 
 export const {
   loginUser, logoutUser, loginFailed, userDenied,
+  userAuthenticationInProgress,
 } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

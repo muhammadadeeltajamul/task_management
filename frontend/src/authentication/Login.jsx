@@ -1,10 +1,17 @@
 import React, { useContext, useState } from 'react';
-import { Button, FormControl, FormLabel, TextField } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, FormControl, FormHelperText, FormLabel, TextField } from '@mui/material';
 import Background from './Background';
-import { validateEmail } from './utils';
+import { validateEmail, validateLoginForm } from './utils';
 import { ConfigContext } from '../config';
+import { fetchUserLogin } from './data/thunks';
+import { selectAuthenticationErrorMessage, selectAuthenticationRequestStatus } from './data/selectors';
+import { RequestStatus } from '../constant';
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const requestStatus = useSelector(selectAuthenticationRequestStatus);
+  const errorMessage = useSelector(selectAuthenticationErrorMessage);
   const { APP_NAME } = useContext(ConfigContext);
   const [formData, setFormData] = useState({
     email: '',
@@ -12,6 +19,7 @@ const Login = () => {
     password: '',
     password_error: false,
   });
+  const requestInProgress = requestStatus === RequestStatus.IN_PROGRESS;
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -19,7 +27,10 @@ const Login = () => {
       [name]: value,
     };
     if (name === 'email') {
-        updateData['email_error'] = !validateEmail(value);
+      updateData['email_error'] = !validateEmail(value);
+    }
+    if (name === 'password') {
+      updateData['password_error'] = value === '';
     }
     setFormData({
       ...formData,
@@ -29,6 +40,9 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (validateLoginForm(formData.email, formData.password)) {
+      dispatch(fetchUserLogin(formData.email, formData.password));
+    }
   };
 
   const fields = [
@@ -55,11 +69,19 @@ const Login = () => {
                   size="small"
                   onChange={handleChange}
                   error={formData[`${field.name}_error`]}
+                  disabled={requestInProgress}
                 />
               </FormControl>
               <br />
             </div>
           ))
+        }
+        {
+          [RequestStatus.DENIED, RequestStatus.FAILED].includes(requestStatus) && (
+            <FormHelperText error>
+              {errorMessage}
+            </FormHelperText>
+          )
         }
         <br />
         <Button
@@ -68,6 +90,7 @@ const Login = () => {
           disabled={
             formData.email_error || formData.password_error
             || formData.email === "" || formData.password === ""
+            || requestInProgress
           }
         >
           Continue
@@ -77,4 +100,4 @@ const Login = () => {
   )
 }
 
-export default Login;
+export default React.memo(Login);

@@ -6,4 +6,5 @@ export const defaultConfigValues = {
 };
 
 const ConfigContext = createContext(defaultConfigValues);
+export const config = { ...defaultConfigValues };
 export default ConfigContext;

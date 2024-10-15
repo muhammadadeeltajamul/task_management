@@ -5,3 +5,9 @@ export const RequestStatus = {
   FAILED: 'failed',
   DENIED: 'denied',
 };
+
+export const AppRoutes = {
+  HOMEPAGE: '/',
+  LOGIN: '/user/login/',
+  SIGNUP: '/user/signup',
+}

@@ -3,15 +3,18 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from "react-redux";
 import { ConfigProvider } from './config';
 import './index.css';
-import Route from './Route';
+import Navigation from './Navigation';
 import store from './store';
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <ConfigProvider>
-        <Route />
+        <BrowserRouter>
+          <Navigation />
+        </BrowserRouter>
       </ConfigProvider>
     </Provider>
   </React.StrictMode>
