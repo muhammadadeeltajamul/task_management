@@ -1,17 +1,13 @@
-import { postUserLogin } from "./api"
+import { postUserLogin, postUserSignUp } from "./api"
 import { loginFailed, loginUser, userAuthenticationInProgress, userDenied } from "./slices";
 
 export const fetchUserLogin = (email, password) => (
   async (dispatch) => {
     try {
       dispatch(userAuthenticationInProgress());
-      console.log("SENDING THUNKS");
       const data = await postUserLogin(email, password);
-      console.log("REQUEST THUNKS ", data);
       dispatch(loginUser(data));
-      console.log("COMPLETED THUNKS");
     } catch(error) {
-        console.log('ERROR ', error);
       if (error.response.status === 401 || error.response.status === 403) {
         dispatch(userDenied(error.response.data));
       } else {
@@ -19,4 +15,20 @@ export const fetchUserLogin = (email, password) => (
       }
     }
   }
-)
+);
+
+export const fetchUserSignUp = (email, password) => (
+  async (dispatch) => {
+    try {
+      dispatch(userAuthenticationInProgress());
+      const data = await postUserSignUp(email, password);
+      dispatch(loginUser(data));
+    } catch(error) {
+      if (error.response.status === 401 || error.response.status === 403) {
+        dispatch(userDenied(error.response.data));
+      } else {
+        dispatch(loginFailed(error.response.data));
+      }
+    }
+  }
+);

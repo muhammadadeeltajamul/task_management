@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, FormControl, FormHelperText, FormLabel, TextField } from '@mui/material';
 import Background from './Background';
 import { selectAuthenticationErrorMessage, selectAuthenticationRequestStatus } from './data/selectors';
-import { fetchUserLogin } from './data/thunks';
-import { validateEmail, validateLoginForm } from './utils';
 import { setAppHeader } from '../components/data/slice';
 import { ConfigContext } from '../config';
 import { RequestStatus } from '../constant';
+import { validateEmail, validateSignUpForm } from './utils';
+import { fetchUserSignUp } from './data/thunks';
 
-const Login = () => {
+const SignUp = () => {
   const dispatch = useDispatch();
   const requestStatus = useSelector(selectAuthenticationRequestStatus);
   const errorMessage = useSelector(selectAuthenticationErrorMessage);
@@ -22,7 +22,6 @@ const Login = () => {
     password_error: false,
   });
   const requestInProgress = requestStatus === RequestStatus.IN_PROGRESS;
-
   const handleChange = (event) => {
     const { name, value } = event.target;
     const updateData = {
@@ -42,8 +41,8 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (validateLoginForm(formData.email, formData.password)) {
-      dispatch(fetchUserLogin(formData.email, formData.password));
+    if (validateSignUpForm(formData.email, formData.password)) {
+      dispatch(fetchUserSignUp(formData.email, formData.password));
     }
   };
 
@@ -51,13 +50,12 @@ const Login = () => {
     { name: "email", label: "Email", type: "email" },
     { name: "password", label: "Password", type: "password" },
   ]
-
   return (
     <Background>
       <form>
         <div className='d-flex flex-column mb-2r'>
           <h2 className='mx-auto'>{APP_NAME}</h2>
-          <h3 className='mx-auto'>Login</h3>
+          <h3 className='mx-auto'>Create account</h3>
         </div>
         {
           fields.map((field) => (
@@ -95,11 +93,11 @@ const Login = () => {
             || requestInProgress
           }
         >
-          Continue
+          SignUp
         </Button>
       </form>
     </Background>
   )
 }
 
-export default React.memo(Login);
+export default React.memo(SignUp);

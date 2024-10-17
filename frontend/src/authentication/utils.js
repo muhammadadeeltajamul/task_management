@@ -8,6 +8,14 @@ export const validateLoginPassword = (password) => (
   password.trim() !==  ''
 );
 
+export const validateSignUpPassword = (password) => (
+  password.trim() !==  ''
+);
+
 export const validateLoginForm = (email, password) => (
   validateEmail(email) && validateLoginPassword(password)
+);
+
+export const validateSignUpForm = (email, password) => (
+  validateEmail(email) && validateSignUpPassword(password)
 );
