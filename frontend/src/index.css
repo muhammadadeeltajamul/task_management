@@ -163,6 +163,10 @@
   left: 0;
 }
 
+.mh-100 {
+  min-height: 100% !important;
+}
+
 .mb-0 {
   margin-bottom: 0 !important;
 }

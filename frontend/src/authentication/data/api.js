@@ -10,7 +10,7 @@ export const postUserLogin = async(email, password) => {
 
 export const postUserSignUp = async(email, password) => {
   const { data } = await sendPostRequest(
-    createUrl("user/login/"),
+    createUrl("user/signup/"),
     { email, password },
   )
   return data;
