@@ -1,20 +1,24 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { AppBar, Box, Button, Toolbar } from '@mui/material';
+import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
 import { selectIsUserLoggedIn, selectUserEmail } from '../authentication/data/selectors';
+import { ConfigContext } from '../config';
 import { AppRoutes } from '../constant';
 
 const Header = () => {
   const isUserLoggedIn = useSelector(selectIsUserLoggedIn);
   const userEmail = useSelector(selectUserEmail);
+  const { APP_NAME } = useContext(ConfigContext);
   if (isUserLoggedIn === null) {
     return null;
   }
   return (
     <AppBar position='static'>
       <Toolbar className='bg-white h-10vh'>
-        <Box display="flex" flexGrow={1}></Box>
+        <Box display="flex" flexGrow={1}>
+          <Typography variant='h6' className='color-primary'>{APP_NAME}</Typography>
+        </Box>
         <Box display="flex" alignItems="stretch">
           {
             isUserLoggedIn
