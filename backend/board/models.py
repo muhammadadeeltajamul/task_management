@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 
 class Board(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, db_index=True)
+    description = models.TextField(default="")
     name = models.CharField(max_length=512, db_index=True)
     columns = models.JSONField(default=list)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT, db_index=True)
