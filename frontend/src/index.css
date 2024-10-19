@@ -11,12 +11,24 @@
   background-color: aliceblue;
 }
 
+.bg-black {
+  background-color: black;
+}
+
 .bg-blue {
   background-color: blue;
 }
 
+.bg-gray {
+  background-color: gray;
+}
+
 .bg-green {
   background-color: green;
+}
+
+.bg-grey {
+  background-color: grey;
 }
 
 .bg-pink {
@@ -163,8 +175,88 @@
   left: 0;
 }
 
-.mh-100 {
+.min-h-100 {
   min-height: 100% !important;
+}
+
+.min-h-5vh {
+  min-height: 5vh;
+}
+
+.min-h-10vh {
+  min-height: 10vh;
+}
+
+.min-h-15vh {
+  min-height: 15vh;
+}
+
+.min-h-20vh {
+  min-height: 20vh;
+}
+
+.min-h-25vh {
+  min-height: 25vh;
+}
+
+.min-h-30vh {
+  min-height: 30vh;
+}
+
+.min-h-35vh {
+  min-height: 35vh;
+}
+
+.min-h-40vh {
+  min-height: 40vh;
+}
+
+.min-h-45vh {
+  min-height: 45vh;
+}
+
+.min-h-50vh {
+  min-height: 50vh;
+}
+
+.min-h-55vh {
+  min-height: 55vh;
+}
+
+.min-h-60vh {
+  min-height: 60vh;
+}
+
+.min-h-65vh {
+  min-height: 65vh;
+}
+
+.min-h-70vh {
+  min-height: 70vh;
+}
+
+.min-h-75vh {
+  min-height: 75vh;
+}
+
+.min-h-80vh {
+  min-height: 80vh;
+}
+
+.min-h-85vh {
+  min-height: 85vh;
+}
+
+.min-h-90vh {
+  min-height: 90vh;
+}
+
+.min-h-95vh {
+  min-height: 95vh;
+}
+
+.min-h-100vh {
+  min-height: 100vh;
 }
 
 .mb-0 {
@@ -459,4 +551,8 @@ body {
 
 .MuiContainer-root {
   min-height: 100vh;
+}
+
+.color-primary {
+  color: #1565c0;
 }

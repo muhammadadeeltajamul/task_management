@@ -13,7 +13,7 @@ const Header = () => {
   }
   return (
     <AppBar position='static'>
-      <Toolbar className='bg-white'>
+      <Toolbar className='bg-white h-10vh'>
         <Box display="flex" flexGrow={1}></Box>
         <Box display="flex" alignItems="stretch">
           {

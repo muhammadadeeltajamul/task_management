@@ -8,6 +8,7 @@ import { RequestStatus, AppRoutes } from './constant';
 import { selectShowHeader } from './components/data/selectors';
 import Header from './components/Header';
 import { fetchIsUserLoggedIn } from './authentication/data/thunks';
+import Footer from './components/Footer';
 
 const Homepage = React.lazy(() => import('./components/Homepage'));
 const Login = React.lazy(() => import('./authentication/Login'));
@@ -51,7 +52,7 @@ const Navigation = () => {
         )
       }
       { showHeader && <Header /> }
-      <div className={`d-flex flex-column h-90vh ${showLoader ? '' : 'pt-4px'}`}>
+      <div className={`d-flex flex-column min-h-80vh ${showLoader ? '' : 'pt-4px'}`}>
         <Suspense fallback={<CircularLoader />}>
           <Routes>
             <Route path={AppRoutes.LOGIN} element={<Login exact />} />
@@ -60,6 +61,7 @@ const Navigation = () => {
           </Routes>
         </Suspense>
       </div>
+      { showHeader && <Footer />}
     </Container>
   )
 }
