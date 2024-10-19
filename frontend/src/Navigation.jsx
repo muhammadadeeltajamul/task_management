@@ -51,7 +51,7 @@ const Navigation = () => {
         )
       }
       { showHeader && <Header /> }
-      <div className={`d-flex flex-column h-95vh ${showLoader ? '' : 'pt-4px'}`}>
+      <div className={`d-flex flex-column h-90vh ${showLoader ? '' : 'pt-4px'}`}>
         <Suspense fallback={<CircularLoader />}>
           <Routes>
             <Route path={AppRoutes.LOGIN} element={<Login exact />} />

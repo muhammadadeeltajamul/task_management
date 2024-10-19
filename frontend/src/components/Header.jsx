@@ -22,6 +22,7 @@ const Header = () => {
               <>
                 <Button
                   variant="outlined"
+                  sx={{ textTransform: 'none' }}
                 >
                   {userEmail}
                 </Button>
