@@ -3,7 +3,7 @@ import { RequestStatus } from "../../constant";
 
 const defaultState = {
   status: RequestStatus.INITIAL,
-  loggedIn: false,
+  loggedIn: null,
   email: '',
   superuser: false,
   errorMessage: '',
@@ -29,11 +29,13 @@ const userSlice = createSlice({
     }),
     loginFailed: (state, { payload }) => ({
       ...state,
+      loggedIn: false,
       status: RequestStatus.FAILED,
       errorMessage: payload.message,
     }),
     userDenied: (state, { payload }) => ({
       ...state,
+      loggedIn: false,
       status: RequestStatus.DENIED,
       errorMessage: payload.message,
     }),

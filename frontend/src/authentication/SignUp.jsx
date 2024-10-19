@@ -1,16 +1,19 @@
 import React, { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { Button, FormControl, FormHelperText, FormLabel, TextField } from '@mui/material';
 import Background from './Background';
-import { selectAuthenticationErrorMessage, selectAuthenticationRequestStatus } from './data/selectors';
+import { selectAuthenticationErrorMessage, selectAuthenticationRequestStatus, selectIsUserLoggedIn } from './data/selectors';
 import { setAppHeader } from '../components/data/slice';
 import { ConfigContext } from '../config';
-import { RequestStatus } from '../constant';
+import { AppRoutes, RequestStatus } from '../constant';
 import { validateEmail, validateSignUpForm } from './utils';
 import { fetchUserSignUp } from './data/thunks';
 
 const SignUp = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isUserLoggedIn = useSelector(selectIsUserLoggedIn);
   const requestStatus = useSelector(selectAuthenticationRequestStatus);
   const errorMessage = useSelector(selectAuthenticationErrorMessage);
   const { APP_NAME } = useContext(ConfigContext);
@@ -22,6 +25,12 @@ const SignUp = () => {
     password_error: false,
   });
   const requestInProgress = requestStatus === RequestStatus.IN_PROGRESS;
+
+  if (isUserLoggedIn === true) {
+    return navigate(AppRoutes.HOMEPAGE);
+  }
+
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     const updateData = {

@@ -1,12 +1,13 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import { CircularProgress, LinearProgress } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
-import { selectAuthenticationRequestStatus } from './authentication/data/selectors';
+import { selectAuthenticationRequestStatus, selectIsUserLoggedIn } from './authentication/data/selectors';
 import { RequestStatus, AppRoutes } from './constant';
 import { selectShowHeader } from './components/data/selectors';
 import Header from './components/Header';
+import { fetchIsUserLoggedIn } from './authentication/data/thunks';
 
 const Homepage = React.lazy(() => import('./components/Homepage'));
 const Login = React.lazy(() => import('./authentication/Login'));
@@ -21,9 +22,25 @@ const CircularLoader = () => (
 )
 
 const Navigation = () => {
+  const dispatch = useDispatch();
   const authRequestStatus = useSelector(selectAuthenticationRequestStatus);
   const showHeader = useSelector(selectShowHeader);
+  const isUserLoggedIn = useSelector(selectIsUserLoggedIn);
+
+  useEffect(() => {
+    if (isUserLoggedIn === null) {
+      dispatch(fetchIsUserLoggedIn());
+    }
+  }, [isUserLoggedIn])
+  
   const showLoader = authRequestStatus === RequestStatus.IN_PROGRESS;
+  if (isUserLoggedIn === null) {
+    return <Container maxWidth={false} disableGutters>
+      <div className='d-flex flex-column h-100vh'>
+        <CircularLoader />
+      </div>
+    </Container>
+  }
   return (
     <Container maxWidth={false} disableGutters>
       {

@@ -8,6 +8,11 @@ from users.utils import get_response_object
 
 
 class LoginView(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return get_response_object(request.user)
+        return Response({"message": "Not Logged In"}, status=status.HTTP_401_UNAUTHORIZED)
+
     def post(self, request):
         if request.user.is_authenticated:
             return Response({"message": "Already logged in"}, status=status.HTTP_400_BAD_REQUEST)

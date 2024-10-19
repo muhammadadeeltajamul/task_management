@@ -1,7 +1,15 @@
-import { createUrl, sendPostRequest } from "../../utils";
+import { createUrl, sendGetRequest, sendPostRequest } from "../../utils";
 
 export const postUserLogin = async(email, password) => {
   const { data } = await sendPostRequest(
+    createUrl("user/login/"),
+    { email, password },
+  )
+  return data;
+};
+
+export const getIsUserLoggedIn = async(email, password) => {
+  const { data } = await sendGetRequest(
     createUrl("user/login/"),
     { email, password },
   )
