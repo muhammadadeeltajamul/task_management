@@ -9,6 +9,7 @@ import { selectShowHeader } from './components/data/selectors';
 import Header from './components/Header';
 import { fetchIsUserLoggedIn } from './authentication/data/thunks';
 import Footer from './components/Footer';
+import BoardList from './boards/BoardList';
 
 const Homepage = React.lazy(() => import('./components/Homepage'));
 const Login = React.lazy(() => import('./authentication/Login'));
@@ -32,6 +33,7 @@ const Navigation = () => {
     if (isUserLoggedIn === null) {
       dispatch(fetchIsUserLoggedIn());
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUserLoggedIn])
   
   const showLoader = authRequestStatus === RequestStatus.IN_PROGRESS;
@@ -55,9 +57,10 @@ const Navigation = () => {
       <div className={`d-flex flex-column min-h-80vh ${showLoader ? '' : 'pt-4px'}`}>
         <Suspense fallback={<CircularLoader />}>
           <Routes>
-            <Route path={AppRoutes.LOGIN} element={<Login exact />} />
-            <Route path={AppRoutes.SIGNUP} element={<SignUp exact />} />
-            <Route path={AppRoutes.HOMEPAGE} element={<Homepage exact />} />
+            <Route path={AppRoutes.LOGIN} element={<Login />} exact />
+            <Route path={AppRoutes.SIGNUP} element={<SignUp />} exact />
+            <Route path={AppRoutes.HOMEPAGE} element={<Homepage />} exact />
+            <Route path={AppRoutes.BOARDS} element={<BoardList />} exact />
           </Routes>
         </Suspense>
       </div>

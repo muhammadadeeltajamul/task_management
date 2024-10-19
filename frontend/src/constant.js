@@ -9,5 +9,6 @@ export const RequestStatus = {
 export const AppRoutes = {
   HOMEPAGE: '/',
   LOGIN: '/user/login/',
-  SIGNUP: '/user/signup',
+  SIGNUP: '/user/signup/',
+  BOARDS: '/boards/'
 }

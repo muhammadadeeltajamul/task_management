@@ -27,7 +27,7 @@ const Login = () => {
   const requestInProgress = requestStatus === RequestStatus.IN_PROGRESS;
 
   if (isUserLoggedIn === true) {
-    return navigate(AppRoutes.HOMEPAGE);
+    return navigate(AppRoutes.BOARDS);
   }
 
   const handleChange = (event) => {
