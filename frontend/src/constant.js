@@ -10,5 +10,6 @@ export const AppRoutes = {
   HOMEPAGE: '/',
   LOGIN: '/user/login/',
   SIGNUP: '/user/signup/',
-  BOARDS: '/boards/'
+  BOARDS: '/boards/',
+  BOARD: '/board/:boardId/'
 }

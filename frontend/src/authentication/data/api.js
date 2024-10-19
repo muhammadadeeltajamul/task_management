@@ -11,7 +11,6 @@ export const postUserLogin = async(email, password) => {
 export const getIsUserLoggedIn = async(email, password) => {
   const { data } = await sendGetRequest(
     createUrl("user/login/"),
-    { email, password },
   )
   return data;
 };

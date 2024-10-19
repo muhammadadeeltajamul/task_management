@@ -17,14 +17,17 @@ const BoardList = () => {
   }, [])
   
   return (
-    <List className='mx-2r my-1r p-1r border-1px border-black border-solid'>
+    <List className='mx-2r my-1r p-1r border-1px border-black border-solid border-radius-8px'>
       {
         boards.map((board) => (
-          <BoardListElement boardId={board.id} key={`board-${board.id}`} />
+          <BoardListElement
+            boardId={board.id}
+            key={`board-${board.id}`}
+          />
         ))    
       }
     </List>
   )
 }
 
-export default BoardList;
+export default React.memo(BoardList);

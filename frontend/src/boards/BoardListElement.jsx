@@ -1,12 +1,18 @@
 import React from 'react';
+import { generatePath, Link } from 'react-router-dom';
 import { ListItem, ListItemText, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { selectBoard } from './data/selectors';
+import { AppRoutes } from '../constant';
 
 const BoardListElement = ({ boardId }) => {
   const board = useSelector(selectBoard(boardId));
   return (
-    <ListItem className='w-90 mx-3r px-2r'>
+    <ListItem
+      className='w-90 mx-3r px-2r'
+      component={Link}
+      to={generatePath(AppRoutes.BOARD, { boardId })}
+    >
       <ListItemText
         primary={
           <Typography variant="h5">
@@ -33,4 +39,4 @@ const BoardListElement = ({ boardId }) => {
   )
 }
 
-export default BoardListElement;
+export default React.memo(BoardListElement);

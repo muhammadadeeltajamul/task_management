@@ -27,6 +27,14 @@ const boardsSlice = createSlice({
       status: RequestStatus.DENIED,
       errorMessage: payload,
     }),
+    addBoard: (state, { payload }) => {
+    const boardExists = state.boards.some(board => board.id === payload.id);
+    const newState = { ...state, status: RequestStatus.SUCCESSFUL };
+    if (!boardExists) {
+      newState['boards'] = [...state.boards, payload];
+    }
+    return newState;
+  },
     updateBoardsList: (state, { payload }) => ({
       ...state,
       status: RequestStatus.SUCCESSFUL,
@@ -37,7 +45,7 @@ const boardsSlice = createSlice({
 
 export const {
     setBoardStatusDenied, setBoardStatusFailed, setBoardStatusInProgress,
-    updateBoardsList,
+    updateBoardsList, addBoard,
 } = boardsSlice.actions;
 
 export const boardReducer = boardsSlice.reducer;
