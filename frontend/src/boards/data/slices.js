@@ -5,7 +5,6 @@ const defaultState = {
   status: RequestStatus.INITIAL,
   boards: [],
   selectedBoard: '',
-  superuser: false,
   errorMessage: '',
 };
 

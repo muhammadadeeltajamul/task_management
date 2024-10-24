@@ -167,6 +167,10 @@
   flex-direction: column;
 }
 
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
 .flex-row {
   flex-direction: row;
 }
@@ -281,6 +285,26 @@
 
 .left-0 {
   left: 0;
+}
+
+.m-1r {
+  margin: 1rem !important;
+}
+
+.m-2r {
+  margin: 2rem !important;
+}
+
+.m-3r {
+  margin: 3rem !important;
+}
+
+.m-4r {
+  margin: 4rem !important;
+}
+
+.m-auto {
+  margin: auto !important;
 }
 
 .min-h-100 {
@@ -623,6 +647,10 @@
 
 .right-0 {
   right: 0;
+}
+
+.text-align-center {
+  text-align: center;
 }
 
 .top-0 {

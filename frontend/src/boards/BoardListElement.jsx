@@ -1,12 +1,15 @@
 import React from 'react';
 import { generatePath, Link } from 'react-router-dom';
 import { ListItem, ListItemText, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectBoard } from './data/selectors';
+import { setAppHeader } from '../components/data/slice';
 import { AppRoutes } from '../constant';
 
 const BoardListElement = ({ boardId }) => {
+  const dispatch = useDispatch();
   const board = useSelector(selectBoard(boardId));
+  dispatch(setAppHeader(true));
   return (
     <ListItem
       className='w-90 mx-3r px-2r'

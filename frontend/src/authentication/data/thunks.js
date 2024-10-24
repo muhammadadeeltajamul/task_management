@@ -25,9 +25,9 @@ export const fetchIsUserLoggedIn = () => (
       dispatch(loginUser(data));
     } catch(error) {
       if (error.response.status === 401 || error.response.status === 403) {
-        dispatch(userDenied(error.response.data));
+        dispatch(userDenied(""));
       } else {
-        dispatch(loginFailed(error.response.data));
+        dispatch(loginFailed(""));
       }
     }
   }

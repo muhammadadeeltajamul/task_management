@@ -27,7 +27,11 @@ export const convertCase = (obj, newCase='camelCase') => {
 };
   
 export const convertCaseObject = (obj, newCase='camelCase') => {
-  if (typeof obj === 'object') {
+  if (obj === null) {
+    return null;
+  } else if (obj === undefined) {
+    return undefined;
+  } else if (typeof obj === 'object') {
     if (Array.isArray(obj)) {
       const newArray = [];
       obj.forEach(element => {
