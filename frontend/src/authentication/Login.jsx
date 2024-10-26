@@ -95,6 +95,7 @@ const Login = () => {
         <br />
         <Button
           variant='contained'
+          type='submit'
           onClick={handleSubmit}
           disabled={
             formData.email_error || formData.password_error
