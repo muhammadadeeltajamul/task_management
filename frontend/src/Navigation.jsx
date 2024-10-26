@@ -1,14 +1,15 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useContext, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import { CircularProgress, LinearProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import { selectAuthenticationRequestStatus, selectIsUserLoggedIn } from './authentication/data/selectors';
-import { RequestStatus, AppRoutes } from './constant';
+import { fetchIsUserLoggedIn } from './authentication/data/thunks';
 import { selectShowHeader } from './components/data/selectors';
 import Header from './components/Header';
-import { fetchIsUserLoggedIn } from './authentication/data/thunks';
 import Footer from './components/Footer';
+import { ConfigContext } from './config';
+import { RequestStatus, AppRoutes } from './constant';
 
 const BoardList = React.lazy(() => import('./boards/BoardList'));
 const BoardView = React.lazy(() => import('./boards/BoardView'));
@@ -26,9 +27,12 @@ const CircularLoader = () => (
 
 const Navigation = () => {
   const dispatch = useDispatch();
+  const { APP_NAME } = useContext(ConfigContext);
   const authRequestStatus = useSelector(selectAuthenticationRequestStatus);
   const showHeader = useSelector(selectShowHeader);
   const isUserLoggedIn = useSelector(selectIsUserLoggedIn);
+
+  document.title = APP_NAME;
 
   useEffect(() => {
     if (isUserLoggedIn === null) {
