@@ -5,7 +5,7 @@ import { ConfigContext } from '../config';
 const Footer = () => {
   const { APP_NAME } = useContext(ConfigContext);
   return (
-    <AppBar position='static'>
+    <AppBar position='static' component="footer">
       <Toolbar className='bg-grey 20vh align-items-top pt-1r'>
         <Box display="flex" flexGrow={0.33}>
           <>{APP_NAME}</>
