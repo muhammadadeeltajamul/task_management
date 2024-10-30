@@ -11,5 +11,6 @@ export const AppRoutes = {
   LOGIN: '/user/login/',
   SIGNUP: '/user/signup/',
   BOARDS: '/boards/',
-  BOARD: '/board/:boardId/'
+  BOARD: '/board/:boardId/',
+  TICKET: '/board/:boardId/',  // query param with ticketId
 }

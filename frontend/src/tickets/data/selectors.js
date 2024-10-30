@@ -6,4 +6,4 @@ export const selectTicketList = boardId => createSelector(
   (tickets) => tickets.filter(ticket => ticket.board === boardId)
 );
 export const selectTicketsRequestStatus = state => state.tickets.status;
-  
+export const selectTicket = ticketId => state => state.tickets.tickets.find(ticket => ticket.id === ticketId);
