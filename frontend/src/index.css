@@ -601,8 +601,8 @@
   position: sticky;
 }
 
-.pt-4px {
-  padding-top: 4px;
+.pt-p5r {
+  padding-top: 0.5rem;
 }
 
 .pt-1r {
@@ -619,6 +619,14 @@
 
 .pt-4r {
   padding-top: 4rem;
+}
+
+.pt-4px {
+  padding-top: 4px;
+}
+
+.pt-8px {
+  padding-top: 8px;
 }
 
 .px-0 {
