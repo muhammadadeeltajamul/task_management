@@ -17,7 +17,14 @@ const Header = () => {
     <AppBar position='static'>
       <Toolbar className='bg-white h-10vh'>
         <Box display="flex" flexGrow={1}>
-          <Typography variant='h6' className='color-primary'>{APP_NAME}</Typography>
+          <Typography
+            variant='h6'
+            className='color-primary text-decoration-none'
+            component={Link}
+            to={isUserLoggedIn ? AppRoutes.BOARDS: AppRoutes.HOMEPAGE}
+          >
+            {APP_NAME}
+          </Typography>
         </Box>
         <Box display="flex" alignItems="stretch">
           {
