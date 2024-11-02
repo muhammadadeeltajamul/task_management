@@ -15,6 +15,7 @@ const BoardList = React.lazy(() => import('./boards/BoardList'));
 const BoardView = React.lazy(() => import('./boards/BoardView'));
 const Homepage = React.lazy(() => import('./components/Homepage'));
 const Login = React.lazy(() => import('./authentication/Login'));
+const ProtectedRoute = React.lazy(() => import('./components/ProtectedRoute'));
 const SignUp = React.lazy(() => import('./authentication/SignUp'));
 
 const CircularLoader = () => (
@@ -65,8 +66,10 @@ const Navigation = () => {
             <Route path={AppRoutes.LOGIN} element={<Login />} exact />
             <Route path={AppRoutes.SIGNUP} element={<SignUp />} exact />
             <Route path={AppRoutes.HOMEPAGE} element={<Homepage />} exact />
-            <Route path={AppRoutes.BOARD} element={<BoardView />} />
-            <Route path={AppRoutes.BOARDS} element={<BoardList />} exact />
+            <Route element={<ProtectedRoute />}>
+              <Route path={AppRoutes.BOARD} element={<BoardView />} />
+              <Route path={AppRoutes.BOARDS} element={<BoardList />} exact />
+            </Route>
           </Routes>
         </Suspense>
       </div>

@@ -55,9 +55,9 @@ const Homepage = () => {
                 {title: 'Task Management', icon: TaskAltIcon, description: 'Organize and prioritize your tasks with ease.'},
                 {title: 'Track Progress', icon: TrackChangesIcon, description: 'Monitor the progress of tasks and projects easily.' },
                 {title: 'Team Collaboration', icon: GroupIcon, description: 'Collaborate with team members, assign tasks, and track progress.'},
-              ].map(feature => (
+              ].map((feature, index) => (
                 <Grid2
-                  item
+                  key={index}
                   sx={{
                     flexBasis: gridWidth,
                     maxWidth: gridWidth,
