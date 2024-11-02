@@ -65,15 +65,21 @@ const Homepage = () => {
                     justifyContent: 'center',
                   }}
                 >
-                  <Card variant="outlined" sx={{ width: '100%' }}>
-                    <CardContent>
-                      <Avatar sx={{ mb: 2, bgcolor: 'primary.main' }}>
+                  <Card variant="outlined" className="w-100 position-relative d-flex align-items-center px-4r py-1r">
+                    <CardContent className="w-100">
+                      <Avatar className='gibberish' sx={{ position: 'absolute', left: '42px', mb: 4, bgcolor: 'primary.main' }}>
                         <feature.icon />
                       </Avatar>
-                      <Typography variant="h6" component="h3" gutterBottom>
+                      <Typography
+                        align='center'
+                        variant="h6"
+                        component="h3"
+                        gutterBottom
+                        className="mb-2r mt-4px"
+                      >
                         {feature.title}
                       </Typography>
-                      <Typography color="textSecondary" className="text-lines-1">
+                      <Typography color="textSecondary">
                         {feature.description}
                       </Typography>
                     </CardContent>

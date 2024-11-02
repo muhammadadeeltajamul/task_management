@@ -826,3 +826,7 @@ body {
 .MuiModal-root *:focus {
   outline: none;
 }
+
+.mt-4px {
+  margin-top: 4px;
+}
