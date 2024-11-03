@@ -8,4 +8,4 @@ class BoardViewSet(ModelViewSet):
     serializer_class = BoardSerializer
 
     def get_queryset(self):
-        return Board.objects.all()
+        return Board.objects.filter(creator=self.request.user)
