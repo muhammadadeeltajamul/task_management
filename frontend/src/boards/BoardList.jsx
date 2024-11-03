@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { List } from '@mui/material';
+import { Box, Grid2, Typography } from '@mui/material';
 import BoardListElement from './BoardListElement';
 import { selectBoardList } from './data/selectors';
 import { fetchBoardsList } from './data/thunks';
@@ -17,16 +17,21 @@ const BoardList = () => {
   }, [])
   
   return (
-    <List className='mx-2r my-1r p-1r border-1px border-black border-solid border-radius-8px'>
-      {
-        boards.map((board) => (
-          <BoardListElement
-            boardId={board.id}
-            key={`board-${board.id}`}
-          />
-        ))    
-      }
-    </List>
+    <Box sx={{ p: 5, minHeight: '100vh' }}>
+      <Typography variant="h3" align="center" sx={{ mb: 5, color: '#333', fontWeight: 'bold', letterSpacing: '1px' }}>
+        Your Boards
+      </Typography>
+      <Grid2 container spacing={3} justifyContent="center">
+        {
+          boards.map((board) => (
+            <BoardListElement
+              boardId={board.id}
+              key={`board-${board.id}`}
+            />
+          ))    
+        }
+      </Grid2>
+    </Box>
   )
 }
 
