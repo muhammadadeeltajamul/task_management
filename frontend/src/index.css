@@ -283,6 +283,18 @@
   height: 0.25rem;
 }
 
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
 .justify-content-start {
   justify-content: start;
 }
@@ -547,6 +559,18 @@
 .my-auto {
   margin-top: auto !important;
   margin-bottom: auto !important;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
 }
 
 .p-0 {

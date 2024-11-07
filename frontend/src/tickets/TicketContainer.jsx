@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { generatePath, Link, useNavigate } from 'react-router-dom';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Avatar, Box, Card, CardContent, Typography } from '@mui/material';
 import { selectTicketList } from './data/selectors';
 import { AppRoutes } from '../constant';
 
@@ -27,13 +27,27 @@ const TicketContainer = ({ boardId, columnName }) => {
             return null;
           }
           return <Card
-          key={`ticket-${columnName}-${ticket.id}`}
-          onClick={() => getTicketLink(ticket.id)}
+            key={`ticket-${columnName}-${ticket.id}`}
+            onClick={() => getTicketLink(ticket.id)}
+            sx={{
+              borderRadius: 2,
+              boxShadow: 2,
+              overflow: 'hidden',
+            }}
           >
             <Link className='text-decoration-none'>
               <CardContent>
-                <Typography variant='h6'>{ticket.title}</Typography>
-                <Typography variant='body2'>{ticket.assignedTo}</Typography>
+                <Typography variant="h6" fontWeight="bold" noWrap>
+                  {ticket.title}
+                </Typography>
+                <Box display="flex" alignItems="center" mt={1} mb={1}>
+                  <Avatar sx={{ bgcolor: 'grey', width: 8, height: 8, mr: 1 }}>
+                    {ticket.creator ? ticket.creator.charAt(0).toUpperCase() : ''}
+                  </Avatar>
+                  <Typography variant="subtitle4" color="textSecondary" noWrap>
+                    {ticket.creator}
+                  </Typography>
+                </Box>
               </CardContent>
             </Link>
           </Card>

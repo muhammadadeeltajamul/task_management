@@ -28,23 +28,24 @@ const BoardView = () => {
       dispatch(fetchTicketsList(boardId));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [board])
+  }, [board, boardId])
 
   if (board == null) {
     return null;
   }
   const columns = board.columns;
+  const columnLength = Math.max(Math.min(100 / columns.length, 25), 40);
   return (
     <>
       { showTicket && <Ticket ticketId={ticketId} /> }
-      <div className="d-flex flex-column m-1r">
-        <div className='d-flex flex-row mb-1r'>
+      <Box className="d-flex flex-column m-1r">
+        <Box className='d-flex flex-row mb-1r'>
           <Typography variant="h6" className='ml-1r mr-auto'>{board.name}</Typography>
           <Button className='ml-auto mr-1r'>
             Manage Board
           </Button>
-        </div>
-        <Grid2 container>
+        </Box>
+        <Box container className="d-flex flex-row overflow-x-auto hide-scrollbar">
           {
             ticketStatus === RequestStatus.IN_PROGRESS &&
             <CircularProgress />
@@ -56,9 +57,17 @@ const BoardView = () => {
           {
             ticketStatus === RequestStatus.SUCCESSFUL &&
             columns.map((columnName, idx) => (
-              <Grid2 key={`column-${idx}-${columnName}`} className="min-h-60vh" style={{ flexBasis: `${100 / columns.length}%` }}>
-                <Box className="d-flex flex-column" justifyContent="stretch">
-                  <Paper className='mx-auto flex-grow-1 w-100 text-align-center'>
+              <Grid2 key={`column-${idx}-${columnName}`} className="min-h-60vh" style={{ flexBasis: `${columnLength}%`, minWidth: '200px', flexShrink: 0, }}>
+                <Box className="d-flex flex-column" justifyContent="stretch" sx={{ padding: '0px 2px'}}>
+                  <Paper
+                    className='d-flex flex-column justify-content-center mx-auto flex-grow-1 w-100 text-align-center mx-1r'
+                    sx={{
+                      backgroundColor: '#f5f5f5',
+                      fontSize: '1.2rem',
+                      fontWeight: 500,
+                      height: '32px',
+                    }}
+                  >
                     {columnName}
                   </Paper>
                 </Box>
@@ -71,8 +80,8 @@ const BoardView = () => {
               </Grid2>
             ))
           }
-        </Grid2>
-      </div>
+        </Box>
+      </Box>
     </>
   );
 }
