@@ -1,5 +1,9 @@
-import { getIsUserLoggedIn, postUserLogin, postUserSignUp } from "./api"
-import { loginFailed, loginUser, userAuthenticationInProgress, userDenied } from "./slices";
+import {
+  getIsUserLoggedIn, getUserLogout, postUserLogin, postUserSignUp,
+} from "./api"
+import {
+  loginFailed, loginUser, logoutUser, userAuthenticationInProgress, userDenied
+} from "./slices";
 
 export const fetchUserLogin = (email, password) => (
   async (dispatch) => {
@@ -7,6 +11,22 @@ export const fetchUserLogin = (email, password) => (
       dispatch(userAuthenticationInProgress());
       const data = await postUserLogin(email, password);
       dispatch(loginUser(data));
+    } catch(error) {
+      if (error.response.status === 401 || error.response.status === 403) {
+        dispatch(userDenied(error.response.data));
+      } else {
+        dispatch(loginFailed(error.response.data));
+      }
+    }
+  }
+);
+
+export const fetchUserLogout = () => (
+  async (dispatch) => {
+    try {
+      dispatch(userAuthenticationInProgress());
+      const data = await getUserLogout();
+      dispatch(logoutUser(data));
     } catch(error) {
       if (error.response.status === 401 || error.response.status === 403) {
         dispatch(userDenied(error.response.data));

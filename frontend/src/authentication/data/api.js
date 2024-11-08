@@ -8,6 +8,13 @@ export const postUserLogin = async(email, password) => {
   return data;
 };
 
+export const getUserLogout = async() => {
+  const { data } = await sendGetRequest(
+    createUrl("user/logout/"),
+  )
+  return data;
+};
+
 export const getIsUserLoggedIn = async(email, password) => {
   const { data } = await sendGetRequest(
     createUrl("user/login/"),
