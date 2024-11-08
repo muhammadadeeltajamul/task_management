@@ -121,3 +121,26 @@ def get_response_object(user):
     response = add_cookies_to_response(response, user)
     response.data = get_user_data(user)
     return response
+
+
+def get_logout_response():
+    response = Response(status=status.HTTP_200_OK)
+    access_token_cookie_name = settings.SIMPLE_JWT['AUTH_COOKIE']
+    refresh_token_cookie_name = settings.SIMPLE_JWT['REFRESH_COOKIE']
+    access_token_life = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
+    is_http_only_cookie = settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY']
+    cookie_secure = settings.SIMPLE_JWT['AUTH_COOKIE_SECURE']
+    cookie_samesite = settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+    cookies = [
+        {'key': access_token_cookie_name, 'value': '', 'expires': access_token_life},
+        {'key': refresh_token_cookie_name, 'value': '', 'expires': access_token_life},
+        {'key': 'email', 'value': '', 'expires': access_token_life},
+    ]
+    for cookie_data in cookies:
+        response.set_cookie(
+            **cookie_data,
+            secure=cookie_secure,
+            httponly=is_http_only_cookie,
+            samesite=cookie_samesite
+            )
+    return response

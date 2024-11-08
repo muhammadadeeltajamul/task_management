@@ -1,10 +1,11 @@
 from django.contrib.auth import authenticate, login
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from users.serializers import SignUpSerializer
-from users.utils import get_response_object
+from users.utils import get_logout_response, get_response_object
 
 
 class LoginView(APIView):
@@ -44,3 +45,9 @@ class SignUpView(APIView):
             return Response({"message": errors_list}, status=status.HTTP_400_BAD_REQUEST)
         user = serializer.save()
         return get_response_object(user)
+
+
+
+@api_view(['GET', 'POST'])
+def logout_api_view(request):
+    return get_logout_response()
