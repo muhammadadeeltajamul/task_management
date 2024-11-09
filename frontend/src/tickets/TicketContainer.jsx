@@ -41,10 +41,10 @@ const TicketContainer = ({ boardId, columnName }) => {
                   {ticket.title}
                 </Typography>
                 <Box display="flex" alignItems="center" mt={1} mb={1}>
-                  <Avatar sx={{ bgcolor: 'grey', width: 8, height: 8, mr: 1 }}>
+                  <Avatar sx={{ bgcolor: 'grey', width: 8, height: 8, mr: 1, fontSize: '8px' }}>
                     {ticket.creator ? ticket.creator.charAt(0).toUpperCase() : ''}
                   </Avatar>
-                  <Typography variant="subtitle4" color="textSecondary" noWrap>
+                  <Typography variant="caption" color="textSecondary" noWrap>
                     {ticket.creator}
                   </Typography>
                 </Box>
