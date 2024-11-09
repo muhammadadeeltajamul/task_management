@@ -1,4 +1,4 @@
-import { createUrl, sendGetRequest } from "../../utils";
+import { createUrl, sendGetRequest, sendPostRequest } from "../../utils";
 
 export const getBoardsList = async() => {
   const { data } = await sendGetRequest(
@@ -13,4 +13,11 @@ export const getBoard = async(boardId) => {
   )
   return data;
 };
-  
+
+export const postNewBoard = async(name, description) => {
+  const { data } = await sendPostRequest(
+    createUrl("board/"),
+    { name, description }
+  )
+  return data;
+};

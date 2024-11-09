@@ -1,10 +1,8 @@
-import { getBoard, getBoardsList } from "./api";
+import { getBoard, getBoardsList, postNewBoard } from "./api";
 import {
-  addBoard,
-  setBoardStatusDenied,
-  setBoardStatusFailed,
-  setBoardStatusInProgress,
-  updateBoardsList
+  addBoard, setBoardStatusDenied, setBoardStatusFailed, setBoardStatusInProgress,
+  setNewBoardStatusDenied, setNewBoardStatusFailed, setNewBoardStatusInProgress,
+  setNewBoardStatusSuccessful, updateBoardsList
 } from "./slices";
 
 export const fetchBoardsList = () => (
@@ -38,3 +36,21 @@ export const fetchBoard = (boardId) => (
     }
   }
 );  
+
+export const createNewBoard = (name, description) => (
+  async (dispatch) => {
+    try {
+      dispatch(setNewBoardStatusInProgress());
+      const board = await postNewBoard(name, description);
+      dispatch(addBoard(board));
+      dispatch(setNewBoardStatusSuccessful());
+    }
+    catch(error) {
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        dispatch(setNewBoardStatusDenied(error?.response?.data));
+      } else {
+        dispatch(setNewBoardStatusFailed(error?.response?.data));
+      }
+    }
+  }
+);

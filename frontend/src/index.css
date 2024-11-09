@@ -164,7 +164,7 @@
 }
 
 .d-flex {
-  display: flex;
+  display: flex !important;
 }
 
 .d-none {
@@ -565,12 +565,24 @@
   overflow: auto;
 }
 
+.overflow-scroll {
+  overflow: scroll;
+}
+
 .overflow-x-auto {
   overflow-x: auto;
 }
 
+.overflow-x-scroll {
+  overflow-x: scroll;
+}
+
 .overflow-y-auto {
   overflow-y: auto;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll;
 }
 
 .p-0 {

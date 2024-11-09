@@ -1,26 +1,53 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Grid2, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Grid2, Typography } from '@mui/material';
 import BoardListElement from './BoardListElement';
-import { selectBoardList } from './data/selectors';
+import { selectBoardList, selectBoardStatus } from './data/selectors';
 import { fetchBoardsList } from './data/thunks';
 import { setAppHeader } from '../components/data/slice';
+import NewBoardForm from './NewBoardForm';
+import { RequestStatus } from '../constant';
+
+const CircularLoader = () => (
+  <div className='d-flex h-100'>
+    <div className='mx-auto my-auto'>
+      <CircularProgress />
+    </div>
+  </div>
+)
 
 const BoardList = () => {
   const dispatch = useDispatch();
+  const [modalOpened, setModalOpened] = useState(false);
   const boards = useSelector(selectBoardList);
-  dispatch(setAppHeader(true));
+  const boardsStatus = useSelector(selectBoardStatus);
 
   useEffect(() => {
-    dispatch(fetchBoardsList());
+    dispatch(setAppHeader(true));
+    if (boardsStatus === RequestStatus.INITIAL) {
+      dispatch(fetchBoardsList());
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  
+
+  if ([RequestStatus.INITIAL, RequestStatus.IN_PROGRESS].includes(boardsStatus)) {
+    return <CircularLoader />;
+  }
+  if ([RequestStatus.FAILED, RequestStatus.DENIED].includes(boardsStatus)) {
+    return <>Error loading page</>;
+  }
+
   return (
     <Box sx={{ p: 5, minHeight: '100vh' }}>
-      <Typography variant="h3" align="center" sx={{ mb: 5, color: '#333', fontWeight: 'bold', letterSpacing: '1px' }}>
+      <Typography variant="h4" align="center" sx={{ color: '#333', fontWeight: 'bold', letterSpacing: '1px' }}>
         Your Boards
       </Typography>
+      <Box className="d-flex my-1r">
+        <Button variant="outlined" className="ml-auto mr-1r" onClick={() => setModalOpened(true)}>
+          Create Board
+        </Button>
+      </Box>
+      <NewBoardForm open={modalOpened} setOpened={setModalOpened} />
       <Grid2 container spacing={3} justifyContent="center">
         {
           boards.map((board) => (

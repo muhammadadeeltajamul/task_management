@@ -3,6 +3,7 @@ import { RequestStatus } from "../../constant";
 
 const defaultState = {
   status: RequestStatus.INITIAL,
+  newBoardFormStatus: RequestStatus.INITIAL,
   boards: [],
   selectedBoard: '',
   errorMessage: '',
@@ -39,12 +40,31 @@ const boardsSlice = createSlice({
       status: RequestStatus.SUCCESSFUL,
       boards: payload,
     }),
-  }
+    setNewBoardStatusInProgress: (state, { payload }) => ({
+      ...state,
+      newBoardFormStatus: RequestStatus.IN_PROGRESS,
+    }),
+    setNewBoardStatusSuccessful: (state, { payload }) => ({
+      ...state,
+      newBoardFormStatus: RequestStatus.SUCCESSFUL,
+    }),
+    setNewBoardStatusFailed: (state, { payload }) => ({
+      ...state,
+      newBoardFormStatus: RequestStatus.FAILED,
+      errorMessage: payload,
+    }),
+    setNewBoardStatusDenied: (state, { payload }) => ({
+      ...state,
+      newBoardFormStatus: RequestStatus.DENIED,
+      errorMessage: payload,
+    }),
+  },
 });
 
 export const {
     setBoardStatusDenied, setBoardStatusFailed, setBoardStatusInProgress,
-    updateBoardsList, addBoard,
+    updateBoardsList, addBoard, setNewBoardStatusInProgress,
+    setNewBoardStatusFailed, setNewBoardStatusDenied, setNewBoardStatusSuccessful,
 } = boardsSlice.actions;
 
 export const boardReducer = boardsSlice.reducer;
