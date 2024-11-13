@@ -81,6 +81,7 @@ const EditableListComponent = ({ value, onChange=(e)=>{} }) => {
               <Avatar
                 className="bg-transparent color-red ml-auto mr-0"
                 style={{
+                  cursor: 'pointer',
                   transition: 'transform 0.3s ease',
                   '&:hover': {
                     transform: 'scale(1.2)',
