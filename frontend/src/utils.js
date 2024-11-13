@@ -60,6 +60,10 @@ export const sendGetRequest = (url, params=null) => {
   return axios.get(url);
 };
   
+export const sendPatchRequest = (url, data) => {
+  return axios.patch(url, data);
+};
+
 export const sendPostRequest = (url, data) => {
   return axios.post(url, data);
 };

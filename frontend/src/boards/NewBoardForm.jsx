@@ -75,8 +75,8 @@ const NewBoardForm = ({ open, setOpened }) => {
           </Box>
           <form onSubmit={onSubmitCreateBoardForm}>
             {
-              fields.map(field => (
-                <div className='mb-1r'>
+              fields.map((field, idx) => (
+                <div className='mb-1r' key={`${field.name}-${idx}`}>
                   <FormControl className='d-flex'>
                     <FormLabel htmlFor={field.name}>{field.label}</FormLabel>
                     <TextField

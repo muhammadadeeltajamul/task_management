@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
 import { Box, Button, CircularProgress, Grid2, Paper, Typography } from '@mui/material';
@@ -9,11 +9,13 @@ import { selectTicketList, selectTicketsRequestStatus } from '../tickets/data/se
 import TicketContainer from '../tickets/TicketContainer';
 import { RequestStatus } from '../constant';
 import Ticket from '../tickets/Ticket';
+import ManageBoard from './ManageBoard';
 
 const BoardView = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { boardId } = useParams();
+  const [openManageBoard, setOpenManageBoard] = useState(false);
   const board = useSelector(selectBoard(boardId));
   const ticketStatus = useSelector(selectTicketsRequestStatus);
   const tickets = useSelector(selectTicketList(boardId));
@@ -41,11 +43,11 @@ const BoardView = () => {
       <Box className="d-flex flex-column m-1r">
         <Box className='d-flex flex-row mb-1r'>
           <Typography variant="h6" className='ml-1r mr-auto'>{board.name}</Typography>
-          <Button className='ml-auto mr-1r'>
+          <Button className='ml-auto mr-1r' onClick={() => setOpenManageBoard(true)}>
             Manage Board
           </Button>
         </Box>
-        <Box container className="d-flex flex-row overflow-x-auto hide-scrollbar">
+        <Box container="true" className="d-flex flex-row overflow-x-auto hide-scrollbar">
           {
             ticketStatus === RequestStatus.IN_PROGRESS &&
             <CircularProgress />
@@ -82,6 +84,11 @@ const BoardView = () => {
           }
         </Box>
       </Box>
+      <ManageBoard
+        boardId={boardId}
+        open={openManageBoard}
+        setOpened={setOpenManageBoard}
+      />
     </>
   );
 }

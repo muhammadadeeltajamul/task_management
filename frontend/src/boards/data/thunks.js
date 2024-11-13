@@ -1,8 +1,11 @@
-import { getBoard, getBoardsList, postNewBoard } from "./api";
+import { getBoard, getBoardsList, patchBoardData, postNewBoard } from "./api";
 import {
   addBoard, setBoardStatusDenied, setBoardStatusFailed, setBoardStatusInProgress,
   setNewBoardStatusDenied, setNewBoardStatusFailed, setNewBoardStatusInProgress,
-  setNewBoardStatusSuccessful, updateBoardsList
+  setNewBoardStatusSuccessful, updateBoardsList,
+  setUpdateBoardStatusInProgress, setUpdateBoardStatusSuccessful,
+  setUpdateBoardStatusFailed, setUpdateBoardStatusDenied,
+  updateBoard,
 } from "./slices";
 
 export const fetchBoardsList = () => (
@@ -50,6 +53,24 @@ export const createNewBoard = (name, description) => (
         dispatch(setNewBoardStatusDenied(error?.response?.data));
       } else {
         dispatch(setNewBoardStatusFailed(error?.response?.data));
+      }
+    }
+  }
+);
+
+export const patchBoard = (boardId, name, value) => (
+  async (dispatch) => {
+    try {
+      dispatch(setUpdateBoardStatusInProgress());
+      await patchBoardData(boardId, name, value);
+      dispatch(updateBoard({boardId, name, value}));
+      dispatch(setUpdateBoardStatusSuccessful());
+  }
+    catch (error) {
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        dispatch(setUpdateBoardStatusDenied(error?.response?.data));
+      } else {
+        dispatch(setUpdateBoardStatusFailed(error?.response?.data));
       }
     }
   }
