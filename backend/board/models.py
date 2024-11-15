@@ -4,6 +4,8 @@ from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 
+from .board_access import BoardAccess
+
 
 class Board(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, db_index=True)
@@ -22,3 +24,9 @@ class Board(models.Model):
         if column_name not in self.columns:
             raise ValidationError("Column doesn't exist")
         self.columns.remove(column_name)
+
+
+class BoardUsers(models.Model):
+    board = models.ForeignKey(Board, on_delete=models.CASCADE, db_index=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    access_level = models.CharField(max_length=36, choices=BoardAccess.choices, default=BoardAccess.NO_ACCESS)
