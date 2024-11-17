@@ -8,5 +8,5 @@ router = DefaultRouter(trailing_slash=False)
 router.register('', BoardViewSet, basename='board')
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
 ]

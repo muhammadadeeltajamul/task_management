@@ -18,6 +18,13 @@ class BoardAccess(TextChoices):
     OWNER = "owner", "Owner"
 
 
+VALID_CHOICES = [choice[0] for choice in BoardAccess.choices]
+
+
+def is_valid_access_level(access_level):
+    return access_level in VALID_CHOICES
+
+
 def get_allowed_actions(permission_level):
     mapping = {
         BoardAccess.NO_ACCESS: [],
