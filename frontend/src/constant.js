@@ -14,3 +14,11 @@ export const AppRoutes = {
   BOARD: '/board/:boardId/',
   TICKET: '/board/:boardId/',  // query param with ticketId
 }
+
+export const AccessLevel = {
+  NO_ACCESS: "no_access",
+  VIEW_ONLY: "view_only",
+  VIEW_AND_COMMENT: "view_and_comment",
+  EDITOR: "editor",
+  OWNER: "owner",
+};

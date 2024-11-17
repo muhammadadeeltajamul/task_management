@@ -89,7 +89,7 @@ const SignUp = () => {
           [RequestStatus.DENIED, RequestStatus.FAILED].includes(requestStatus) && (
             <FormHelperText error>
               {
-                errorMessage.map((line, index) => (
+                errorMessage?.map((line, index) => (
                   <div key={`error-${index}`}>{line}</div>
                 ))
               }

@@ -4,6 +4,10 @@ import { RequestStatus } from "../../constant";
 const defaultState = {
   status: RequestStatus.INITIAL,
   newBoardFormStatus: RequestStatus.INITIAL,
+  apiStatus: {
+    membersListStatus: RequestStatus.INITIAL,
+    updateBoardAccessStatus: RequestStatus.INITIAL,
+  },
   boardUpdateStatus: RequestStatus.INITIAL,
   boards: [],
   selectedBoard: '',
@@ -85,6 +89,39 @@ const boardsSlice = createSlice({
       boardUpdateStatus: RequestStatus.DENIED,
       errorMessage: payload,
     }),
+    updateApiRequestStatus: (state, { payload }) => ({
+      ...state,
+      apiStatus: {
+        ...state.apiStatus,
+        [payload.name]: payload.status 
+      },
+    }),
+    updateBoardAccess: (state, { payload }) => {
+      const newState = { ...state };
+      const board = state.boards?.find(element => element.id === payload.boardId);
+      const memberExist = board?.members.find(member => member.id === payload.access.id)
+      if (memberExist) {
+        newState.boards = newState.boards.map((element) => (
+          element.id === payload.boardId
+          ? {
+            ...element,
+            members: element.members.map(member => (
+              member.id === payload.access.id
+              ? { ...payload.access }
+              : member
+            ))
+          }
+          : element
+        ))
+      } else {
+        newState.boards = newState.boards.map((element) => (
+          element.id === payload.boardId
+          ? { ...element, members: [...element.members, payload.access]}
+          : element
+        ));
+      }
+      return newState;
+    },
   },
 });
 
@@ -94,6 +131,7 @@ export const {
     setNewBoardStatusFailed, setNewBoardStatusDenied, setNewBoardStatusSuccessful,
     setUpdateBoardStatusInProgress, setUpdateBoardStatusSuccessful,
     setUpdateBoardStatusFailed, setUpdateBoardStatusDenied,
+    updateApiRequestStatus, updateBoardAccess,
 } = boardsSlice.actions;
 
 export const boardReducer = boardsSlice.reducer;

@@ -1,11 +1,12 @@
-import { getBoard, getBoardsList, patchBoardData, postNewBoard } from "./api";
+import { RequestStatus } from "../../constant";
+import { getBoard, getBoardsList, getMembersList, patchBoardData, postNewBoard, postUserBoardAccess } from "./api";
 import {
   addBoard, setBoardStatusDenied, setBoardStatusFailed, setBoardStatusInProgress,
   setNewBoardStatusDenied, setNewBoardStatusFailed, setNewBoardStatusInProgress,
-  setNewBoardStatusSuccessful, updateBoardsList,
+  setNewBoardStatusSuccessful, updateBoardsList, updateApiRequestStatus,
   setUpdateBoardStatusInProgress, setUpdateBoardStatusSuccessful,
   setUpdateBoardStatusFailed, setUpdateBoardStatusDenied,
-  updateBoard,
+  updateBoard, updateBoardAccess,
 } from "./slices";
 
 export const fetchBoardsList = () => (
@@ -65,8 +66,7 @@ export const patchBoard = (boardId, name, value) => (
       await patchBoardData(boardId, name, value);
       dispatch(updateBoard({boardId, name, value}));
       dispatch(setUpdateBoardStatusSuccessful());
-  }
-    catch (error) {
+    } catch (error) {
       if (error?.response?.status === 401 || error?.response?.status === 403) {
         dispatch(setUpdateBoardStatusDenied(error?.response?.data));
       } else {
@@ -75,3 +75,39 @@ export const patchBoard = (boardId, name, value) => (
     }
   }
 );
+
+export const fetchMembersList = (boardId) => (
+  async (dispatch) => {
+    const stateName = "membersListStatus";
+    try {
+      dispatch(updateApiRequestStatus({ name: stateName, status: RequestStatus.IN_PROGRESS}));
+      const data = await getMembersList(boardId);
+      dispatch(updateBoard({boardId, name: 'members', value: data}));
+      dispatch(updateApiRequestStatus({ name: stateName, status: RequestStatus.SUCCESSFUL}));
+    } catch (error) {
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        dispatch(updateApiRequestStatus({ name: stateName, status: RequestStatus.DENIED}));
+      } else {
+        dispatch(updateApiRequestStatus({ name: stateName, status: RequestStatus.FAILED}));
+      }
+    }
+  }
+);
+
+export const updateUserBoardAccess = (boardId, email, accessLevel) => (
+  async (dispatch) => {
+    const stateName = "updateBoardAccessStatus";
+    try {
+      dispatch(updateApiRequestStatus({ name: stateName, status: RequestStatus.IN_PROGRESS}));
+      const data = await postUserBoardAccess(boardId, email, accessLevel);
+      dispatch(updateBoardAccess({boardId, access: data}));
+      dispatch(updateApiRequestStatus({ name: stateName, status: RequestStatus.SUCCESSFUL}));
+    } catch (error) {
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        dispatch(updateApiRequestStatus({ name: stateName, status: RequestStatus.DENIED}));
+      } else {
+        dispatch(updateApiRequestStatus({ name: stateName, status: RequestStatus.FAILED}));
+      }
+    }
+  }
+)

@@ -3,3 +3,6 @@ export const selectSelectedBoard = state => state.boards.selectedBoard;
 export const selectBoardStatus = state => state.boards.status;
 export const selectNewBoardStatus = state => state.boards.newBoardFormStatus;
 export const selectBoard = boardId => state => state.boards.boards.find(board => board.id === boardId);
+export const selectBoardMembers = boardId => state => state.boards.boards.find(board => board.id === boardId)?.members || [];
+export const selectBoardAccesslevel = boardId => state => state.boards.boards.find(board => board.id === boardId)?.accessLevel;
+export const selectMembersListStatus = state => state.boards.membersListStatus;

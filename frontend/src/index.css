@@ -609,6 +609,10 @@
   padding: 0 !important;
 }
 
+.p-p5r {
+  padding: 0.5rem !important;
+}
+
 .p-1r {
   padding: 1rem !important;
 }
@@ -717,6 +721,11 @@
 .py-0 {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+}
+
+.py-p5r {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
 }
 
 .py-1r {

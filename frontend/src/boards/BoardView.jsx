@@ -2,23 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
 import { Box, Button, CircularProgress, Grid2, Paper, Typography } from '@mui/material';
-import { selectBoard } from './data/selectors';
-import { fetchBoard } from './data/thunks';
-import { fetchTicketsList } from '../tickets/data/thunks';
-import { selectTicketList, selectTicketsRequestStatus } from '../tickets/data/selectors';
-import TicketContainer from '../tickets/TicketContainer';
-import { RequestStatus } from '../constant';
-import Ticket from '../tickets/Ticket';
+import BoardMembers from './BoardMembers';
 import ManageBoard from './ManageBoard';
+import { selectBoard, selectBoardAccesslevel } from './data/selectors';
+import { fetchBoard } from './data/thunks';
+import { selectTicketList, selectTicketsRequestStatus } from '../tickets/data/selectors';
+import { AccessLevel, RequestStatus } from '../constant';
+import { fetchTicketsList } from '../tickets/data/thunks';
+import Ticket from '../tickets/Ticket';
+import TicketContainer from '../tickets/TicketContainer';
 
 const BoardView = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { boardId } = useParams();
   const [openManageBoard, setOpenManageBoard] = useState(false);
+  const [openBoardMembers, setOpenBoardMembers] = useState(false);
   const board = useSelector(selectBoard(boardId));
   const ticketStatus = useSelector(selectTicketsRequestStatus);
   const tickets = useSelector(selectTicketList(boardId));
+  const accessLevel = useSelector(selectBoardAccesslevel(boardId));
+  console.log('user access ', accessLevel);
   const ticketId = new URLSearchParams(location.search).get('ticketId');
   const showTicket = ticketId != null;
 
@@ -43,7 +47,14 @@ const BoardView = () => {
       <Box className="d-flex flex-column m-1r">
         <Box className='d-flex flex-row mb-1r'>
           <Typography variant="h6" className='ml-1r mr-auto'>{board.name}</Typography>
-          <Button className='ml-auto mr-1r' onClick={() => setOpenManageBoard(true)}>
+          {
+            accessLevel === AccessLevel.OWNER && (
+              <Button className='ml-auto mr-1r' onClick={() => setOpenBoardMembers(true)}>
+                Members
+              </Button>
+            )
+          }
+          <Button className='mr-1r' onClick={() => setOpenManageBoard(true)}>
             Manage Board
           </Button>
         </Box>
@@ -88,6 +99,11 @@ const BoardView = () => {
         boardId={boardId}
         open={openManageBoard}
         setOpened={setOpenManageBoard}
+      />
+      <BoardMembers
+        boardId={boardId}
+        open={openBoardMembers}
+        setOpened={setOpenBoardMembers}
       />
     </>
   );
