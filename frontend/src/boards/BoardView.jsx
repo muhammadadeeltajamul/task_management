@@ -6,11 +6,12 @@ import BoardMembers from './BoardMembers';
 import ManageBoard from './ManageBoard';
 import { selectBoard, selectBoardAccesslevel } from './data/selectors';
 import { fetchBoard } from './data/thunks';
-import { selectTicketList, selectTicketsRequestStatus } from '../tickets/data/selectors';
+import { selectTicketList, selectTicketRequestStatus } from '../tickets/data/selectors';
 import { AccessLevel, RequestStatus } from '../constant';
 import { fetchTicketsList } from '../tickets/data/thunks';
 import Ticket from '../tickets/Ticket';
 import TicketContainer from '../tickets/TicketContainer';
+import CreateTicket from '../tickets/CreateTicket';
 
 const BoardView = () => {
   const dispatch = useDispatch();
@@ -18,11 +19,11 @@ const BoardView = () => {
   const { boardId } = useParams();
   const [openManageBoard, setOpenManageBoard] = useState(false);
   const [openBoardMembers, setOpenBoardMembers] = useState(false);
+  const [openTicketModal, setOpenTicketModal] = useState(false);
   const board = useSelector(selectBoard(boardId));
-  const ticketStatus = useSelector(selectTicketsRequestStatus);
+  const ticketStatus = useSelector(selectTicketRequestStatus('fetchTickets'));
   const tickets = useSelector(selectTicketList(boardId));
   const accessLevel = useSelector(selectBoardAccesslevel(boardId));
-  console.log('user access ', accessLevel);
   const ticketId = new URLSearchParams(location.search).get('ticketId');
   const showTicket = ticketId != null;
 
@@ -49,7 +50,14 @@ const BoardView = () => {
           <Typography variant="h6" className='ml-1r mr-auto'>{board.name}</Typography>
           {
             accessLevel === AccessLevel.OWNER && (
-              <Button className='ml-auto mr-1r' onClick={() => setOpenBoardMembers(true)}>
+              <Button className='ml-auto mr-1r' onClick={() => setOpenTicketModal(true)}>
+                Create Ticket
+              </Button>
+            )
+          }
+          {
+            accessLevel === AccessLevel.OWNER && (
+              <Button className='mr-1r' onClick={() => setOpenBoardMembers(true)}>
                 Members
               </Button>
             )
@@ -105,6 +113,7 @@ const BoardView = () => {
         open={openBoardMembers}
         setOpened={setOpenBoardMembers}
       />
+      <CreateTicket open={openTicketModal} setOpened={setOpenTicketModal}/>
     </>
   );
 }

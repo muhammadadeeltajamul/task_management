@@ -61,7 +61,7 @@ const BoardMembers = ({ boardId, open, setOpened }) => {
   return (
     <>
       <Modal
-        open={open}
+        open={Boolean(open)}
         onClose={() => setOpened(false)}
       >
         <Box sx={style} className="overflow-y-auto hide-scrollbar pt-0">

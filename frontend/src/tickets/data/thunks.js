@@ -1,21 +1,23 @@
+import { RequestStatus } from "../../constant";
 import { getTicketsList } from "./api";
 import {
-  setTicketsStatusDenied, setTicketsStatusFailed,
-  setTicketsStatusInProgress, updateTicketsList
+  setTicketRequestStatus, updateTicketsList
 } from "./slices";
 
 export const fetchTicketsList = (boardId) => (
     async (dispatch) => {
+      const callName = 'fetchTickets';
       try {
-        dispatch(setTicketsStatusInProgress());
+        dispatch(setTicketRequestStatus({name: callName, status: RequestStatus.IN_PROGRESS}));
         const data = await getTicketsList(boardId);
         dispatch(updateTicketsList(data));
       } catch(error) {
-        if (error.response.status === 401 || error.response.status === 403) {
-          dispatch(setTicketsStatusDenied(error.response.data));
-        } else {
-          dispatch(setTicketsStatusFailed(error.response.data));
-        }
+        const status = [401, 403].includes(error?.response?.status) ? RequestStatus.DENIED : RequestStatus.FAILED;
+        dispatch(setTicketRequestStatus({
+          name: callName,
+          status: status,
+          message: error?.response?.data || ''
+        }));
       }
     }
   );  

@@ -2,7 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RequestStatus } from "../../constant";
 
 const defaultState = {
-  status: RequestStatus.INITIAL,
+  apiStatus: {
+    fetchTickets: { status: RequestStatus.INITIAL, message: ''},
+    createTicket: { status: RequestStatus.INITIAL, message: ''},
+  },
   tickets: [],
   selectedTicket: '',
   errorMessage: '',
@@ -12,39 +15,41 @@ const ticketsSlice = createSlice({
   name: 'tickets',
   initialState: { ...defaultState },
   reducers: {
-    setTicketsStatusInProgress: (state, { payload }) => ({
+    setTicketRequestStatus: (state, { payload }) => ({
       ...state,
-      status: RequestStatus.IN_PROGRESS,
-    }),
-    setTicketsStatusFailed: (state, { payload }) => ({
-      ...state,
-      status: RequestStatus.FAILED,
-      errorMessage: payload,
-    }),
-    setTicketsStatusDenied: (state, { payload }) => ({
-      ...state,
-      status: RequestStatus.DENIED,
-      errorMessage: payload,
+      apiStatus: {
+        ...state.apiStatus,
+        [payload.name]: {
+          ...state.apiStatus[payload.name],
+          status: payload.status,
+          message: payload.message || '',
+        },
+      },
     }),
     addTicket: (state, { payload }) => {
-    const ticketExists = state.tickets.some(ticket => ticket.id === payload.id);
-    const newState = { ...state, status: RequestStatus.SUCCESSFUL };
-    if (!ticketExists) {
-      newState['tickets'] = [...state.tickets, payload];
-    }
-    return newState;
-  },
+      const ticketExists = state.tickets.some(ticket => ticket.id === payload.id);
+      const newState = { ...state, status: RequestStatus.SUCCESSFUL };
+      if (!ticketExists) {
+        newState['tickets'] = [...state.tickets, payload];
+      }
+      return newState;
+    },
     updateTicketsList: (state, { payload }) => ({
       ...state,
-      status: RequestStatus.SUCCESSFUL,
+      apiStatus: {
+        ...state.apiStatus,
+        fetchTickets: {
+          ...state.apiStatus.fetchTickets,
+          status: RequestStatus.SUCCESSFUL,
+        }
+      },
       tickets: payload,
     }),
   }
 });
 
 export const {
-    setTicketsStatusInProgress, setTicketsStatusFailed, setTicketsStatusDenied,
-    addTicket, updateTicketsList,
+  setTicketRequestStatus, addTicket, updateTicketsList,
 } = ticketsSlice.actions;
 
 export const ticketsReducer = ticketsSlice.reducer;

@@ -179,6 +179,10 @@
   color: red !important;
 }
 
+.d-block {
+  display: block !important;
+}
+
 .d-inline-block {
   display: inline-block !important;
 }
@@ -756,8 +760,20 @@
   text-align: center;
 }
 
+.text-align-end {
+  text-align: end;
+}
+
+.text-align-start {
+  text-align: start;
+}
+
 .text-decoration-none {
   text-decoration: none;
+}
+
+.text-transform-none {
+  text-transform: none !important;
 }
 
 .top-0 {
