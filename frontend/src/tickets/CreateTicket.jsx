@@ -9,6 +9,7 @@ import {
 import { selectBoardColumns } from '../boards/data/selectors';
 import { RequestStatus } from '../constant';
 import { selectTicketRequestStatus } from './data/selectors';
+import { createNewTicket } from './data/thunks';
 
 const style = {
     position: 'absolute',
@@ -76,11 +77,11 @@ const CreateTicket = ({ open, setOpened }) => {
     setMenuOpened(openedData)
   };
   
-  const onSubmitCreateBoardForm = (event) => {
+  const onSubmitCreateTicketForm = (event) => {
     event.preventDefault();
-    // dispatch(createNewBoard(formData.name, formData.description));
+    dispatch(createNewTicket(boardId, formData.title, formData.description, formData.columnName));
     setOpened(false);
-    setFormData({name: '', description: ''});
+    setFormData({name: '', description: '', columnName: columnsList[0] || ' '});
   };
 
   const onSelectMenuItem = (fieldName, columnName) => {
@@ -106,7 +107,7 @@ const CreateTicket = ({ open, setOpened }) => {
           <Box className="d-flex">
             <Typography variant="h5" className="mx-auto">Create a New Ticket</Typography>
           </Box>
-          <form onSubmit={onSubmitCreateBoardForm}>
+          <form onSubmit={onSubmitCreateTicketForm}>
             {
               fields.map((field, idx) => (
                 <div className='mb-1r' key={`${field.name}-${idx}`}>

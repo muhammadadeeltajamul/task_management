@@ -28,7 +28,7 @@ const ticketsSlice = createSlice({
     }),
     addTicket: (state, { payload }) => {
       const ticketExists = state.tickets.some(ticket => ticket.id === payload.id);
-      const newState = { ...state, status: RequestStatus.SUCCESSFUL };
+      const newState = { ...state };
       if (!ticketExists) {
         newState['tickets'] = [...state.tickets, payload];
       }
