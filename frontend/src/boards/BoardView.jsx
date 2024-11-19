@@ -21,7 +21,7 @@ const BoardView = () => {
   const [openBoardMembers, setOpenBoardMembers] = useState(false);
   const [openTicketModal, setOpenTicketModal] = useState(false);
   const board = useSelector(selectBoard(boardId));
-  const ticketStatus = useSelector(selectTicketRequestStatus('fetchTickets'));
+  const ticketStatus = useSelector(selectTicketRequestStatus('fetchTickets')).status;
   const tickets = useSelector(selectTicketList(boardId));
   const accessLevel = useSelector(selectBoardAccesslevel(boardId));
   const ticketId = new URLSearchParams(location.search).get('ticketId');

@@ -29,7 +29,7 @@ export const postNewBoard = async(name, description) => {
 
 export const patchBoardData = async(boardId, key, value) => {
   const { data } = await sendPatchRequest(
-    createUrl(`board/${boardId}/`),
+    createUrl(`board/${boardId}`),
     { key, value }
   )
   return camelCaseObject(data);

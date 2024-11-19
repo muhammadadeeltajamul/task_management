@@ -26,7 +26,6 @@ const ManageBoard = ({ boardId, open, setOpened }) => {
 
   const onSaveField = (fieldName, value) => {
     dispatch(patchBoard(board.id, fieldName, value));
-    console.log("== CONSOLE", fieldName, value);
   };
   return (
     <>
