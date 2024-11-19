@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
-import { Box, Button, CircularProgress, Grid2, Paper, Typography } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Grid2, Paper, Snackbar, Typography } from '@mui/material';
 import BoardMembers from './BoardMembers';
 import ManageBoard from './ManageBoard';
 import { selectBoard, selectBoardAccesslevel } from './data/selectors';
@@ -20,6 +20,7 @@ const BoardView = () => {
   const [openManageBoard, setOpenManageBoard] = useState(false);
   const [openBoardMembers, setOpenBoardMembers] = useState(false);
   const [openTicketModal, setOpenTicketModal] = useState(false);
+  const [snackBarData, setSnackBarData] = useState({ severity:'success', text: '', open: false });
   const board = useSelector(selectBoard(boardId));
   const ticketStatus = useSelector(selectTicketRequestStatus('fetchTickets')).status;
   const tickets = useSelector(selectTicketList(boardId));
@@ -40,8 +41,18 @@ const BoardView = () => {
   if (board == null) {
     return null;
   }
+
   const columns = board.columns;
   const columnLength = Math.max(Math.min(100 / columns.length, 25), 40);
+
+  const onClickCreateTicket = () => {
+    if (columns.length <= 0) {
+      setSnackBarData({ open: true, severity: 'error', text: 'Add column before adding ticket'});
+    } else {
+      setOpenTicketModal(true);
+    }
+
+  }
   return (
     <>
       { showTicket && <Ticket ticketId={ticketId} /> }
@@ -50,7 +61,7 @@ const BoardView = () => {
           <Typography variant="h6" className='ml-1r mr-auto'>{board.name}</Typography>
           {
             accessLevel === AccessLevel.OWNER && (
-              <Button className='ml-auto mr-1r' onClick={() => setOpenTicketModal(true)}>
+              <Button className='ml-auto mr-1r' onClick={onClickCreateTicket}>
                 Create Ticket
               </Button>
             )
@@ -113,7 +124,22 @@ const BoardView = () => {
         open={openBoardMembers}
         setOpened={setOpenBoardMembers}
       />
-      <CreateTicket open={openTicketModal} setOpened={setOpenTicketModal}/>
+      <CreateTicket
+        open={openTicketModal}
+        setOpened={setOpenTicketModal}
+      />
+      <Snackbar
+        open={snackBarData.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackBarData({ ...snackBarData, open: false })}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert
+          severity={snackBarData.severity}
+        >
+          {snackBarData.text}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
