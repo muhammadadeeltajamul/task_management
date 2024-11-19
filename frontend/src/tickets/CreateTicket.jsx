@@ -137,7 +137,7 @@ const CreateTicket = ({ open, setOpened }) => {
                             anchorEl={anchorElement[field.name]}
                             onClose={() => onCloseMenuBar(field.name)}
                             disableScrollLock
-                            open={menuOpened[field.name]}
+                            open={Boolean(menuOpened[field.name])}
                             anchorOrigin={{
                               vertical: 'bottom',
                               horizontal: 'left',

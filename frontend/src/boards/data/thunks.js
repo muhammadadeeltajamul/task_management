@@ -4,8 +4,6 @@ import {
   addBoard, setBoardStatusDenied, setBoardStatusFailed, setBoardStatusInProgress,
   setNewBoardStatusDenied, setNewBoardStatusFailed, setNewBoardStatusInProgress,
   setNewBoardStatusSuccessful, updateBoardsList, updateApiRequestStatus,
-  setUpdateBoardStatusInProgress, setUpdateBoardStatusSuccessful,
-  setUpdateBoardStatusFailed, setUpdateBoardStatusDenied,
   updateBoard, updateBoardAccess,
 } from "./slices";
 
@@ -62,16 +60,13 @@ export const createNewBoard = (name, description) => (
 export const patchBoard = (boardId, name, value) => (
   async (dispatch) => {
     try {
-      dispatch(setUpdateBoardStatusInProgress());
+      dispatch(updateApiRequestStatus({ name: "updateBoardStatus", status: RequestStatus.IN_PROGRESS }));
       await patchBoardData(boardId, name, value);
       dispatch(updateBoard({boardId, name, value}));
-      dispatch(setUpdateBoardStatusSuccessful());
+      dispatch(updateApiRequestStatus({ name: "updateBoardStatus", status: RequestStatus.SUCCESSFUL }));
     } catch (error) {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        dispatch(setUpdateBoardStatusDenied(error?.response?.data));
-      } else {
-        dispatch(setUpdateBoardStatusFailed(error?.response?.data));
-      }
+      const errorStatus = [401, 403].includes(error?.response?.status) ? RequestStatus.DENIED : RequestStatus.FAILED;
+      dispatch(updateApiRequestStatus({ name: "updateBoardStatus", status: errorStatus }));
     }
   }
 );

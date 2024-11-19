@@ -63,7 +63,7 @@ const NewBoardForm = ({ open, setOpened }) => {
   return (
     <>
       <Modal
-        open={open}
+        open={Boolean(open)}
         onClose={() => setOpened(false)}
       >  
         <Box sx={style} className='p-2r hide-scrollbar overflow-y-scroll'>
@@ -85,7 +85,7 @@ const NewBoardForm = ({ open, setOpened }) => {
                       value={formData[field.name]}
                       size="small"
                       onChange={handleChange}
-                      error=''
+                      error={false}
                       disabled={false}
                       fullWidth
                       inputProps={field.inputProps}
@@ -105,7 +105,7 @@ const NewBoardForm = ({ open, setOpened }) => {
         open={snackBarOpen}
         autoHideDuration={3000}
         onClose={() => setSnackBarOpen(false)}
-       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert
           severity={newBoardStatus === RequestStatus.SUCCESSFUL ? "success" : "error"}

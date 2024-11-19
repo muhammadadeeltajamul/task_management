@@ -5,8 +5,18 @@ const defaultState = {
   status: RequestStatus.INITIAL,
   newBoardFormStatus: RequestStatus.INITIAL,
   apiStatus: {
-    membersListStatus: RequestStatus.INITIAL,
-    updateBoardAccessStatus: RequestStatus.INITIAL,
+    membersListStatus: {
+      status: RequestStatus.INITIAL,
+      message: '',
+    },
+    updateBoardStatus: {
+      status: RequestStatus.INITIAL,
+      message: '',
+    },
+    updateBoardAccessStatus: {
+      status: RequestStatus.INITIAL,
+      message: '',
+    },
   },
   boardUpdateStatus: RequestStatus.INITIAL,
   boards: [],
@@ -71,29 +81,15 @@ const boardsSlice = createSlice({
       newBoardFormStatus: RequestStatus.DENIED,
       errorMessage: payload,
     }),
-    setUpdateBoardStatusInProgress: (state, { payload }) => ({
-      ...state,
-      boardUpdateStatus: RequestStatus.IN_PROGRESS,
-    }),
-    setUpdateBoardStatusSuccessful: (state, { payload }) => ({
-      ...state,
-      boardUpdateStatus: RequestStatus.SUCCESSFUL,
-    }),
-    setUpdateBoardStatusFailed: (state, { payload }) => ({
-      ...state,
-      boardUpdateStatus: RequestStatus.FAILED,
-      errorMessage: payload,
-    }),
-    setUpdateBoardStatusDenied: (state, { payload }) => ({
-      ...state,
-      boardUpdateStatus: RequestStatus.DENIED,
-      errorMessage: payload,
-    }),
     updateApiRequestStatus: (state, { payload }) => ({
       ...state,
       apiStatus: {
         ...state.apiStatus,
-        [payload.name]: payload.status 
+        [payload.name]: {
+          ...state.apiStatus[payload.name],
+          status: payload.status,
+          message: payload.message || '',
+        },
       },
     }),
     updateBoardAccess: (state, { payload }) => {
@@ -129,8 +125,6 @@ export const {
     setBoardStatusDenied, setBoardStatusFailed, setBoardStatusInProgress,
     updateBoardsList, addBoard, updateBoard, setNewBoardStatusInProgress,
     setNewBoardStatusFailed, setNewBoardStatusDenied, setNewBoardStatusSuccessful,
-    setUpdateBoardStatusInProgress, setUpdateBoardStatusSuccessful,
-    setUpdateBoardStatusFailed, setUpdateBoardStatusDenied,
     updateApiRequestStatus, updateBoardAccess,
 } = boardsSlice.actions;
 

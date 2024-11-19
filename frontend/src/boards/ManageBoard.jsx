@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Button, Modal, Typography } from '@mui/material';
+import { Alert, Box, Button, Modal, Snackbar, Typography } from '@mui/material';
 import EditableTextField from '../components/EditableTextField';
 import EditableListComponent from '../components/EditableListComponent';
-import { selectBoard } from './data/selectors';
+import { selectBoard, selectBoardApiStatus } from './data/selectors';
 import { patchBoard } from './data/thunks';
+import { RequestStatus } from '../constant';
 
 const style = {
   position: 'absolute',
@@ -21,8 +22,17 @@ const style = {
 };
     
 const ManageBoard = ({ boardId, open, setOpened }) => {
-  const board = useSelector(selectBoard(boardId));
   const dispatch = useDispatch();
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const board = useSelector(selectBoard(boardId));
+  const statusName = 'updateBoardStatus';
+  const updateStatus = useSelector(selectBoardApiStatus(statusName)).status;
+
+  useEffect(() => {
+    if (![RequestStatus.INITIAL, RequestStatus.IN_PROGRESS].includes(updateStatus)) {
+      setSnackBarOpen(true);
+    }
+  }, [updateStatus]);
 
   const onSaveField = (fieldName, value) => {
     dispatch(patchBoard(board.id, fieldName, value));
@@ -64,6 +74,22 @@ const ManageBoard = ({ boardId, open, setOpened }) => {
           </Box>
         </Box>
       </Modal>
+      <Snackbar
+        open={snackBarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackBarOpen(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert
+          severity={updateStatus === RequestStatus.SUCCESSFUL ? "success" : "error"}
+        >
+          {
+            updateStatus === RequestStatus.SUCCESSFUL
+              ? "Board updated successfully"
+              : "Error updating board"
+          }
+        </Alert>
+      </Snackbar>
     </>
   )
 }
