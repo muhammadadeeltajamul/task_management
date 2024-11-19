@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  Alert,
   Avatar, Box, Button, Menu, MenuItem,
-  Modal, TextField, Typography
+  Modal, Snackbar, TextField, Typography
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { AccessLevel } from '../constant';
-import { selectBoardMembers } from './data/selectors';
+import { AccessLevel, RequestStatus } from '../constant';
+import { selectBoardApiStatus, selectBoardMembers } from './data/selectors';
 import { fetchMembersList, updateUserBoardAccess } from './data/thunks';
 
 const style = {
@@ -26,9 +27,12 @@ const style = {
 const BoardMembers = ({ boardId, open, setOpened }) => {
   const dispatch = useDispatch();
   const members = useSelector(selectBoardMembers(boardId));
+  const accessStatusName = "updateBoardAccessStatus";
+  const updateAccessStatus = useSelector(selectBoardApiStatus(accessStatusName)).status;
   const [menuStates, setMenuStates] = useState({'menu-add-new': null});
   const [usernameText, setUsernameText] = useState('');
   const [addNewUserPermission, setAddNewUserPermission] = useState('VIEW_ONLY');
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -37,6 +41,11 @@ const BoardMembers = ({ boardId, open, setOpened }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, boardId]);
 
+  useEffect(() => {
+    if (![RequestStatus.INITIAL, RequestStatus.IN_PROGRESS].includes(updateAccessStatus)) {
+      setSnackBarOpen(true);
+    }
+  }, [updateAccessStatus])
   const handleClick = (id, event) => {
     setMenuStates((prev) => ({ ...prev, [id]: event.currentTarget }));
   };
@@ -45,9 +54,10 @@ const BoardMembers = ({ boardId, open, setOpened }) => {
     setMenuStates((prev) => ({ ...prev, [id]: null }));
   };
 
-  const onClickMenuItem = (user, value) => {
-    dispatch(updateUserBoardAccess(boardId, user, AccessLevel[value]));
+  const onClickMenuItem = async (user, value) => {
+    await dispatch(updateUserBoardAccess(boardId, user, AccessLevel[value]));
     handleClose(user);
+    setSnackBarOpen(true);
   };
 
   const onChangeNewUserPermission = (value) => {
@@ -55,8 +65,9 @@ const BoardMembers = ({ boardId, open, setOpened }) => {
     handleClose('menu-add-new');
   }
 
-  const onClickAddNewPermission = () => {
-    dispatch(updateUserBoardAccess(boardId, usernameText, AccessLevel[addNewUserPermission]));
+  const onClickAddNewPermission = async () => {
+    await dispatch(updateUserBoardAccess(boardId, usernameText, AccessLevel[addNewUserPermission]));
+    setUsernameText("");
   }
   return (
     <>
@@ -64,7 +75,7 @@ const BoardMembers = ({ boardId, open, setOpened }) => {
         open={Boolean(open)}
         onClose={() => setOpened(false)}
       >
-        <Box sx={style} className="overflow-y-auto hide-scrollbar pt-0">
+        <Box sx={style} className="overflow-y-auto hide-scrollbar pt-0 pb-4r">
           <Box className='d-flex position-sticky pt-2r pb-1r mx-0 top-0 bg-white z-index-1000'>
             <Button
               onClick={() => setOpened(false)}
@@ -174,6 +185,22 @@ const BoardMembers = ({ boardId, open, setOpened }) => {
           </Box>
         </Box>
       </Modal>
+      <Snackbar
+        open={snackBarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackBarOpen(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert
+          severity={updateAccessStatus === RequestStatus.SUCCESSFUL ? "success" : "error"}
+        >
+          {
+            updateAccessStatus === RequestStatus.SUCCESSFUL
+            ? "Updated access"
+            : "Error updating access"
+          }
+        </Alert>
+      </Snackbar>
     </>
   )
 }
