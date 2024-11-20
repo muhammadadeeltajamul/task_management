@@ -145,7 +145,7 @@ const CreateTicket = ({ open, setOpened }) => {
                             }}
                             PaperProps={{
                               sx: {
-                                width: anchorElement[field.name] ? anchorElement[field.name].offsetWidth : undefined, // Match anchor width
+                                width: anchorElement[field.name] ? anchorElement[field.name].offsetWidth : undefined,
                               },
                             }}
                           >

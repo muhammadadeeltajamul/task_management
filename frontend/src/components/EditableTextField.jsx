@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 
-const EditableTextField = ({ value, onSave=(event) => {}, textProps={}, inputProps={} }) => {
+const EditableTextField = ({ value, onSave=(event) => {}, props={}, textProps={}, inputProps={} }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [textValue, setTextValue] = useState(value);
 
@@ -18,7 +18,7 @@ const EditableTextField = ({ value, onSave=(event) => {}, textProps={}, inputPro
   };
   return (
     <>
-      <Box className="d-flex align-items-center">
+      <Box className="d-flex align-items-center" {...props}>
         {
           isEditing
             ? <>

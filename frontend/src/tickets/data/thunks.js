@@ -1,8 +1,8 @@
+import camelCase from "lodash.camelcase";
 import { RequestStatus } from "../../constant";
-import { getTicketsList, postNewTicket } from "./api";
+import { getTicketsList, patchTicketData, postNewTicket } from "./api";
 import {
-  addTicket,
-  setTicketRequestStatus, updateTicketsList
+  addTicket, setTicketRequestStatus, updateTicket, updateTicketsList
 } from "./slices";
 
 export const fetchTicketsList = (boardId) => (
@@ -40,3 +40,21 @@ export const createNewTicket = (boardId, title, description, columnName) => (
     }
   }
 );  
+
+export const fetchUpdateTicket = (ticketId, key, value) => (
+  async (dispatch) => {
+    const callName = 'updateTicket';
+    try {
+      dispatch(setTicketRequestStatus({name: callName, status: RequestStatus.IN_PROGRESS}));
+      await patchTicketData(ticketId, key, value);
+      dispatch(updateTicket({id: ticketId, key: camelCase(key), value}));
+    } catch(error) {
+      const status = [401, 403].includes(error?.response?.status) ? RequestStatus.DENIED : RequestStatus.FAILED;
+      dispatch(setTicketRequestStatus({
+        name: callName,
+        status: status,
+        message: error?.response?.data || ''
+      }));
+    }
+  }
+)

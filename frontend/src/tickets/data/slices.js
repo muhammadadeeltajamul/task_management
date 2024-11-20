@@ -3,8 +3,9 @@ import { RequestStatus } from "../../constant";
 
 const defaultState = {
   apiStatus: {
-    fetchTickets: { status: RequestStatus.INITIAL, message: ''},
     createTicket: { status: RequestStatus.INITIAL, message: ''},
+    fetchTickets: { status: RequestStatus.INITIAL, message: ''},
+    updateTicket: { status: RequestStatus.INITIAL, message: ''},
   },
   tickets: [],
   selectedTicket: '',
@@ -34,6 +35,14 @@ const ticketsSlice = createSlice({
       }
       return newState;
     },
+    updateTicket: (state, { payload }) => ({
+      ...state,
+      tickets: state.tickets.map(ticket => (
+        ticket.id === payload.id
+        ? {...ticket, [payload.key]: payload.value}
+        : ticket
+      ))
+    }),
     updateTicketsList: (state, { payload }) => ({
       ...state,
       apiStatus: {
@@ -49,7 +58,7 @@ const ticketsSlice = createSlice({
 });
 
 export const {
-  setTicketRequestStatus, addTicket, updateTicketsList,
+  setTicketRequestStatus, addTicket, updateTicket, updateTicketsList,
 } = ticketsSlice.actions;
 
 export const ticketsReducer = ticketsSlice.reducer;
