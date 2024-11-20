@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, Menu, MenuItem, Modal } from '@mui/material';
+import { Alert, Box, Button, Menu, MenuItem, Modal, Snackbar } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectTicket } from './data/selectors';
+import { selectTicket, selectTicketRequestStatus } from './data/selectors';
 import { selectBoard, selectBoardApiStatus, selectBoardMembers } from '../boards/data/selectors';
 import EditableTextField from '../components/EditableTextField';
+import { setTicketRequestStatus } from './data/slices';
 import { fetchUpdateTicket } from './data/thunks';
 import { fetchMembersList } from '../boards/data/thunks';
 import { AccessLevel, RequestStatus } from '../constant';
@@ -28,6 +29,7 @@ const Ticket = ({ ticketId }) => {
   const { boardId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const updateTicketStatus = useSelector(selectTicketRequestStatus("updateTicket")).status;
   const memberStatus = useSelector(selectBoardApiStatus("membersListStatus")).status;
   const members = useSelector(selectBoardMembers(boardId));
   const visibleMembers = [
@@ -38,6 +40,7 @@ const Ticket = ({ ticketId }) => {
   ];
   const board = useSelector(selectBoard(boardId));
   const ticket = useSelector(selectTicket(ticketId));
+  const [snackbarData, setSnackbarData] = useState({ text: '', opened: false, severity: 'success' });
   const [menuData, setMenuData] = useState({
     assignedTo: {anchor: null, opened: false},
     columnName: {anchor: null, opened: false},
@@ -49,6 +52,25 @@ const Ticket = ({ ticketId }) => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memberStatus])
+
+  useEffect(() => {
+    if (updateTicketStatus === RequestStatus.SUCCESSFUL) {
+      setSnackbarData({
+        text: 'Updated successfully',
+        opened: true,
+        severity: 'success',
+      });
+      dispatch(setTicketRequestStatus({ name: 'updateTicket', status: RequestStatus.INITIAL }));
+    } else if ([RequestStatus.DENIED, RequestStatus.FAILED].includes(updateTicketStatus)) {
+      setSnackbarData({
+        text: 'Error updating ticket data',
+        opened: true,
+        severity: 'error',
+      });
+      dispatch(setTicketRequestStatus({ name: 'updateTicket', status: RequestStatus.INITIAL }));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateTicketStatus]);
 
   const goToBoard = () => {
     if (location.search) {
@@ -175,6 +197,18 @@ const Ticket = ({ ticketId }) => {
           </Box>
         </Box>
       </Modal>
+      <Snackbar
+        open={snackbarData.opened}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarData({ ...snackbarData, opened: false })}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert
+          severity={snackbarData.severity}
+        >
+          {snackbarData.text}
+        </Alert>
+      </Snackbar>
     </div>
   )
 }

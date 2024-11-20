@@ -92,7 +92,7 @@ const BoardView = () => {
               <Grid2 key={`column-${idx}-${columnName}`} className="min-h-60vh" style={{ flexBasis: `${columnLength}%`, minWidth: '200px', flexShrink: 0, }}>
                 <Box className="d-flex flex-column" justifyContent="stretch" sx={{ padding: '0px 2px'}}>
                   <Paper
-                    className='d-flex flex-column justify-content-center mx-auto flex-grow-1 w-100 text-align-center mx-1r'
+                    className='d-flex flex-column justify-content-center mx-auto flex-grow-1 w-100 text-align-center mx-1r mb-p5r'
                     sx={{
                       backgroundColor: '#f5f5f5',
                       fontSize: '1.2rem',

@@ -507,6 +507,10 @@
   margin-bottom: auto !important;
 }
 
+.mb-p5r {
+  margin-bottom: 0.5rem !important;
+}
+
 .ml-0 {
   margin-left: 0 !important;
 }

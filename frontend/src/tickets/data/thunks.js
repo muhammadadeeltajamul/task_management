@@ -48,6 +48,7 @@ export const fetchUpdateTicket = (ticketId, key, value) => (
       dispatch(setTicketRequestStatus({name: callName, status: RequestStatus.IN_PROGRESS}));
       await patchTicketData(ticketId, key, value);
       dispatch(updateTicket({id: ticketId, key: camelCase(key), value}));
+      dispatch(setTicketRequestStatus({name: callName, status: RequestStatus.SUCCESSFUL}));
     } catch(error) {
       const status = [401, 403].includes(error?.response?.status) ? RequestStatus.DENIED : RequestStatus.FAILED;
       dispatch(setTicketRequestStatus({

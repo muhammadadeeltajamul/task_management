@@ -29,6 +29,7 @@ const TicketContainer = ({ boardId, columnName }) => {
           return <Card
             key={`ticket-${columnName}-${ticket.id}`}
             onClick={() => getTicketLink(ticket.id)}
+            className='mb-p5r'
             sx={{
               borderRadius: 2,
               boxShadow: 2,
