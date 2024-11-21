@@ -9,6 +9,7 @@ import { setTicketRequestStatus } from './data/slices';
 import { fetchUpdateTicket } from './data/thunks';
 import { fetchMembersList } from '../boards/data/thunks';
 import { AccessLevel, RequestStatus } from '../constant';
+import Comments from '../comments/Comments';
 
 const style = {
   position: 'absolute',
@@ -195,6 +196,7 @@ const Ticket = ({ ticketId }) => {
               </Menu>
             </Box>
           </Box>
+          <Comments ticketId={ticketId} />
         </Box>
       </Modal>
       <Snackbar
