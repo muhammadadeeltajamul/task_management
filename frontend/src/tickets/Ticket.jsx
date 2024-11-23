@@ -195,8 +195,8 @@ const Ticket = ({ ticketId }) => {
                 }
               </Menu>
             </Box>
+            <Comments ticketId={ticketId} />
           </Box>
-          <Comments ticketId={ticketId} />
         </Box>
       </Modal>
       <Snackbar
