@@ -4,6 +4,7 @@ import { RequestStatus } from "../../constant";
 const defaultState = {
   apiStatus: {
     fetchTicketComments: { status: RequestStatus.INITIAL, message: '' },
+    updateComment: { status: RequestStatus.INITIAL, message: '' },
   },
   comments: [],
 };
@@ -34,8 +35,8 @@ const commentsSlice = createSlice({
     updateComment: (state, { payload }) => ({
       ...state,
       comments: state.comments.map(
-        comment => comment.id === payload.commentId
-        ? {...comment, [payload.name]: payload.value}
+        comment => comment.id === payload.id
+        ? { ...comment, ...payload }
         : comment
       )
     }),

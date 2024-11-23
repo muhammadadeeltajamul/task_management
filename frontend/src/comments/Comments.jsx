@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, Box, Paper, Typography } from '@mui/material';
 import { selectCommentsList } from './data/selectors';
-import { fetchCommentsList } from './data/thunks';
+import { fetchCommentsList, updateCommentData } from './data/thunks';
 import { selectUserEmail } from '../authentication/data/selectors';
 import EditableTextField from '../components/EditableTextField';
 
@@ -14,11 +14,17 @@ const Comments = ({ ticketId }) => {
     dispatch(fetchCommentsList(ticketId));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ticketId]);
+
+  const onSaveUpdateComment = (commentId, text) => {
+    dispatch(updateCommentData(commentId, { description: text }));
+  };
+
   return (
     <Box>
       {
         comments?.map(comment => (
           <Paper
+            key={comment.id}
             elevation={3}
             className="d-flex flex-column"
             sx={{
@@ -43,7 +49,11 @@ const Comments = ({ ticketId }) => {
             <Box className="d-flex align-items-center w-100">
               {
                 userEmail === comment.author
-                ? <EditableTextField value={comment.description} textProps={{ variant: "body2", color: "text.secondary", className: "ml-2r" }} />
+                ? <EditableTextField
+                    value={comment.description}
+                    onSave={(text) => onSaveUpdateComment(comment.id, text)}
+                    textProps={{ variant: "body2", color: "text.secondary", className: "ml-2r" }}
+                  />
                 : <Typography variant="body2" color="text.secondary" className="ml-2r">
                     {comment.description}
                   </Typography>
