@@ -24,3 +24,16 @@ class CommentsViewSet(ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True, context={'user': request.user})
         return Response(serializer.data)
+
+    def partial_update(self, request, pk=None):
+        if not "description" in request.data.keys():
+            raise ValidationError("Invalid field")
+        if not request.data['description']:
+            raise ValidationError("Error validating field")
+        instance = Comments.objects.get(pk=pk)
+        if request.user != instance.author:
+            raise ValidationError("You don't have permission to update comment")
+        setattr(instance, 'description', str(request.data['description']))
+        instance.save()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
