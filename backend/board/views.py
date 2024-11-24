@@ -18,7 +18,9 @@ class BoardViewSet(ModelViewSet):
     serializer_class = BoardSerializer
 
     def list(self, request, *args, **kwargs):
-        board_ids_queryset = BoardUsers.objects.filter(user=self.request.user).values_list('board', flat=True)
+        board_ids_queryset = BoardUsers.objects.filter(
+            user=self.request.user
+        ).exclude(access_level=BoardAccess.NO_ACCESS).values_list('board', flat=True)
         queryset = Board.objects.filter(id__in=board_ids_queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -48,6 +50,9 @@ class BoardViewSet(ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         board_id = kwargs['pk']
         instance = Board.objects.get(id=board_id)
+        board_user = get_object_or_404(BoardUsers, user=request.user, board=instance)
+        if board_user.access_level == BoardAccess.NO_ACCESS:
+            raise PermissionError("You don't have access to board")
         serializer = self.get_serializer(instance, context={'user': request.user})
         return Response(serializer.data)
 
