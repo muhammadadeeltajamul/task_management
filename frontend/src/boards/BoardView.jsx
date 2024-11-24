@@ -32,7 +32,7 @@ const BoardView = () => {
     if (board == null) {
       dispatch(fetchBoard(boardId));
     }
-    if (![RequestStatus.IN_PROGRESS, RequestStatus.SUCCESSFUL].includes(ticketStatus)) {
+    if (![RequestStatus.IN_PROGRESS].includes(ticketStatus)) {
       dispatch(fetchTicketsList(boardId));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

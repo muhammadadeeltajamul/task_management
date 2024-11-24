@@ -3,6 +3,7 @@ import { RequestStatus } from "../../constant";
 
 const defaultState = {
   apiStatus: {
+    createComment: { status: RequestStatus.INITIAL, message: '' },
     fetchTicketComments: { status: RequestStatus.INITIAL, message: '' },
     updateComment: { status: RequestStatus.INITIAL, message: '' },
   },

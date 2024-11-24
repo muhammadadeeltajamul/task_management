@@ -1,6 +1,6 @@
 import {
   camelCaseObject, createUrl, sendGetRequest,
-  sendPatchRequest,
+  sendPatchRequest, sendPostRequest,
 } from "../../utils";
   
 export const getCommentsList = async(ticketId) => {
@@ -14,6 +14,14 @@ export const patchComment = async(commentId, updatedData) => {
   const { data } = await sendPatchRequest(
     createUrl(`comment/${commentId}`),
     { ...updatedData },
+  )
+  return camelCaseObject(data);
+};
+
+export const postComment = async(ticketId, description) => {
+  const { data } = await sendPostRequest(
+    createUrl(`comment/?ticket_id=${ticketId}`),
+    { description },
   )
   return camelCaseObject(data);
 };

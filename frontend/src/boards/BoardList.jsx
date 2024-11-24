@@ -48,7 +48,7 @@ const BoardList = () => {
         </Button>
       </Box>
       <NewBoardForm open={modalOpened} setOpened={setModalOpened} />
-      <Grid2 container spacing={3} justifyContent="center">
+      <Grid2 container spacing={1} justifyContent="center">
         {
           boards.map((board) => (
             <BoardListElement

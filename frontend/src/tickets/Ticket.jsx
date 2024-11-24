@@ -112,9 +112,9 @@ const Ticket = ({ ticketId }) => {
 
   return (
     <div>
-      <Modal open onClose={goToBoard} className='py-0'>
-        <Box sx={style} className='p-2r'>
-          <Box className='d-flex py-0 mx-0'>
+      <Modal open onClose={goToBoard}>
+        <Box sx={style} className='d-flex flex-column overflow-y-auto hide-scrollbar bg-white m-2r px-2r pt-2r pb-1r'>
+          <Box className='d-flex py-0 mx-0 mt-1r'>
             <Button className='ml-auto mr-0 p-0 color-red' onClick={goToBoard}>&#x2716;</Button>
           </Box>
           <Box className='d-flex flex-column px-1r'>
@@ -195,6 +195,8 @@ const Ticket = ({ ticketId }) => {
                 }
               </Menu>
             </Box>
+          </Box>
+          <Box className='d-flex flex-column p-1r mb-0 mt-auto bg-white'>
             <Comments ticketId={ticketId} />
           </Box>
         </Box>
