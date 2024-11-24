@@ -37,3 +37,17 @@ class CommentsViewSet(ModelViewSet):
         instance.save()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+    def create(self, request):
+        ticket_id = request.GET.get("ticket_id")
+        if not ticket_id:
+            raise ValidationError("Invalid ticket id")
+        description = str(request.data.get('description', "")).strip()
+        if not description:
+            raise ValidationError("Description cannot be empty")
+        comment = Comments.objects.create(
+            author=request.user,
+            ticket_id=ticket_id,
+            description=description
+        )
+        return Response(self.get_serializer(comment).data)
