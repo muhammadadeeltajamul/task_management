@@ -11,6 +11,7 @@ from board.board_access import (
 )
 from board.models import Board, BoardUsers
 from board.serializers import BoardSerializer, BoardUsersSerializer
+from board.utils import check_permission_for_user
 
 
 User = get_user_model()
@@ -58,6 +59,7 @@ class BoardViewSet(ModelViewSet):
         return Response(serializer.data)
 
     def partial_update(self, request, pk):
+        check_permission_for_user(Actions.UPDATE_BOARD, request.user, board_id=pk)
         key = request.data.get("key")
         value = request.data.get("value")
         if not (key and value):

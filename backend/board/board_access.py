@@ -1,8 +1,10 @@
 from django.db.models import TextChoices
 from django.core.exceptions import PermissionDenied
 
+
 class Actions:
     VIEW_BOARD = "view_board"
+    UPDATE_BOARD = "update_board"
 
     READ_TICKET = "read_ticket"
     READ_COMMENTS = "read_comments"
@@ -32,8 +34,8 @@ def get_allowed_actions(permission_level):
         BoardAccess.NO_ACCESS: [],
         BoardAccess.VIEW_ONLY: [Actions.VIEW_BOARD],
         BoardAccess.VIEW_AND_COMMENT: [Actions.VIEW_BOARD],
-        BoardAccess.EDITOR: [Actions.VIEW_BOARD],
-        BoardAccess.OWNER: [Actions.VIEW_BOARD],
+        BoardAccess.EDITOR: [Actions.VIEW_BOARD, Actions.UPDATE_BOARD],
+        BoardAccess.OWNER: [Actions.VIEW_BOARD, Actions.UPDATE_BOARD],
     }
     return mapping[permission_level]
 
