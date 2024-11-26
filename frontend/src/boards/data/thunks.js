@@ -1,72 +1,68 @@
 import { RequestStatus } from "../../constant";
 import { getBoard, getBoardsList, getMembersList, patchBoardData, postNewBoard, postUserBoardAccess } from "./api";
 import {
-  addBoard, setBoardStatusDenied, setBoardStatusFailed, setBoardStatusInProgress,
-  setNewBoardStatusDenied, setNewBoardStatusFailed, setNewBoardStatusInProgress,
-  setNewBoardStatusSuccessful, updateBoardsList, updateApiRequestStatus,
+  addBoard, updateBoardsList, updateApiRequestStatus,
   updateBoard, updateBoardAccess,
 } from "./slices";
 
 export const fetchBoardsList = () => (
   async (dispatch) => {
+    const statusName = "fetchBoardList";
     try {
-      dispatch(setBoardStatusInProgress());
+      dispatch(updateApiRequestStatus({ name: statusName, status: RequestStatus.IN_PROGRESS }));
       const data = await getBoardsList();
       dispatch(updateBoardsList(data));
+      dispatch(updateApiRequestStatus({ name: statusName, status: RequestStatus.SUCCESSFUL }));
     } catch(error) {
-      if (error.response.status === 401 || error.response.status === 403) {
-        dispatch(setBoardStatusDenied(error.response.data));
-      } else {
-        dispatch(setBoardStatusFailed(error.response.data));
-      }
+      const status = [401, 403].includes(error?.response?.status) ? RequestStatus.DENIED : RequestStatus.FAILED;
+      dispatch(updateApiRequestStatus({ name: statusName, status }));
     }
   }
 );  
 
 export const fetchBoard = (boardId) => (
   async (dispatch) => {
+    const statusName = "fetchBoardData";
     try {
-      dispatch(setBoardStatusInProgress());
+      dispatch(addBoard({ id: boardId }));
+      dispatch(updateApiRequestStatus({ name: statusName, status: RequestStatus.IN_PROGRESS }));
       const data = await getBoard(boardId);
       dispatch(addBoard(data));
+      dispatch(updateApiRequestStatus({ name: statusName, status: RequestStatus.SUCCESSFUL }));
     } catch(error) {
-      if (error.response.status === 401 || error.response.status === 403) {
-        dispatch(setBoardStatusDenied(error.response.data));
-      } else {
-        dispatch(setBoardStatusFailed(error.response.data));
-      }
+      const status = [401, 403].includes(error?.response?.status) ? RequestStatus.DENIED : RequestStatus.FAILED;
+      dispatch(updateApiRequestStatus({ name: statusName, status, boardId, data: { error: true, errorMessage: error?.response?.data?.detail } }));
     }
   }
 );  
 
 export const createNewBoard = (name, description) => (
   async (dispatch) => {
+    const statusName = "createBoard";
     try {
-      dispatch(setNewBoardStatusInProgress());
+      dispatch(updateApiRequestStatus({ name: statusName, status: RequestStatus.IN_PROGRESS }));
       const board = await postNewBoard(name, description);
       dispatch(addBoard(board));
-      dispatch(setNewBoardStatusSuccessful());
+      dispatch(updateApiRequestStatus({ name: statusName, status: RequestStatus.SUCCESSFUL }));
     }
     catch(error) {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        dispatch(setNewBoardStatusDenied(error?.response?.data));
-      } else {
-        dispatch(setNewBoardStatusFailed(error?.response?.data));
-      }
+      const status = [401, 403].includes(error?.response?.status) ? RequestStatus.DENIED : RequestStatus.FAILED;
+      dispatch(updateApiRequestStatus({ name: statusName, status, data: { error: true, errorMessage: error?.response?.data?.detail } }));
     }
   }
 );
 
 export const patchBoard = (boardId, name, value) => (
   async (dispatch) => {
+    const statusName = "updateBoardStatus";
     try {
-      dispatch(updateApiRequestStatus({ name: "updateBoardStatus", status: RequestStatus.IN_PROGRESS }));
+      dispatch(updateApiRequestStatus({ name: statusName, status: RequestStatus.IN_PROGRESS }));
       await patchBoardData(boardId, name, value);
       dispatch(updateBoard({boardId, name, value}));
-      dispatch(updateApiRequestStatus({ name: "updateBoardStatus", status: RequestStatus.SUCCESSFUL }));
+      dispatch(updateApiRequestStatus({ name: statusName, status: RequestStatus.SUCCESSFUL }));
     } catch (error) {
       const errorStatus = [401, 403].includes(error?.response?.status) ? RequestStatus.DENIED : RequestStatus.FAILED;
-      dispatch(updateApiRequestStatus({ name: "updateBoardStatus", status: errorStatus }));
+      dispatch(updateApiRequestStatus({ name: statusName, status: errorStatus }));
     }
   }
 );

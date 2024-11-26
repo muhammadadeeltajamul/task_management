@@ -5,18 +5,12 @@ const defaultState = {
   status: RequestStatus.INITIAL,
   newBoardFormStatus: RequestStatus.INITIAL,
   apiStatus: {
-    membersListStatus: {
-      status: RequestStatus.INITIAL,
-      message: '',
-    },
-    updateBoardStatus: {
-      status: RequestStatus.INITIAL,
-      message: '',
-    },
-    updateBoardAccessStatus: {
-      status: RequestStatus.INITIAL,
-      message: '',
-    },
+    fetchBoardList: { status: RequestStatus.INITIAL, message: '' },
+    fetchBoardData: { status: RequestStatus.INITIAL, message: '' },
+    createBoard: { status: RequestStatus.INITIAL, message: '' },
+    membersListStatus: { status: RequestStatus.INITIAL, message: '' },
+    updateBoardStatus: { status: RequestStatus.INITIAL, message: '' },
+    updateBoardAccessStatus: { status: RequestStatus.INITIAL, message: '' },
   },
   boardUpdateStatus: RequestStatus.INITIAL,
   boards: [],
@@ -44,15 +38,20 @@ const boardsSlice = createSlice({
     }),
     addBoard: (state, { payload }) => {
       const boardExists = state.boards.some(board => board.id === payload.id);
-      const newState = { ...state, status: RequestStatus.SUCCESSFUL };
-      if (!boardExists) {
+      const newState = { ...state };
+      if (boardExists) {
+        newState['boards'] = state.boards.map(
+          board => board.id === payload.id
+          ? {...board, ...payload}
+          : board
+        )
+      } else {
         newState['boards'] = [...state.boards, payload];
       }
       return newState;
     },
     updateBoardsList: (state, { payload }) => ({
       ...state,
-      status: RequestStatus.SUCCESSFUL,
       boards: payload,
     }),
     updateBoard: (state, { payload }) => ({
@@ -83,6 +82,12 @@ const boardsSlice = createSlice({
     }),
     updateApiRequestStatus: (state, { payload }) => ({
       ...state,
+      boards: payload.boardId
+              ? state.boards.map((board) =>
+                  payload.boardId === board.id
+                  ? {...board, ...payload.data} : board
+                )
+              : state.boards,
       apiStatus: {
         ...state.apiStatus,
         [payload.name]: {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, CircularProgress, Grid2, Typography } from '@mui/material';
 import BoardListElement from './BoardListElement';
-import { selectBoardList, selectBoardStatus } from './data/selectors';
+import { selectBoardApiStatus, selectBoardList } from './data/selectors';
 import { fetchBoardsList } from './data/thunks';
 import { setAppHeader } from '../components/data/slice';
 import NewBoardForm from './NewBoardForm';
@@ -20,20 +20,20 @@ const BoardList = () => {
   const dispatch = useDispatch();
   const [modalOpened, setModalOpened] = useState(false);
   const boards = useSelector(selectBoardList);
-  const boardsStatus = useSelector(selectBoardStatus);
+  const boardsStatus = useSelector(selectBoardApiStatus("fetchBoardList"));
 
   useEffect(() => {
     dispatch(setAppHeader(true));
-    if (boardsStatus === RequestStatus.INITIAL) {
+    if (boardsStatus.status === RequestStatus.INITIAL) {
       dispatch(fetchBoardsList());
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if ([RequestStatus.INITIAL, RequestStatus.IN_PROGRESS].includes(boardsStatus)) {
+  if ([RequestStatus.INITIAL, RequestStatus.IN_PROGRESS].includes(boardsStatus.status)) {
     return <CircularLoader />;
   }
-  if ([RequestStatus.FAILED, RequestStatus.DENIED].includes(boardsStatus)) {
+  if ([RequestStatus.FAILED, RequestStatus.DENIED].includes(boardsStatus.status)) {
     return <>Error loading page</>;
   }
 

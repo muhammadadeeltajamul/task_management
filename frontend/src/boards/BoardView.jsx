@@ -29,20 +29,22 @@ const BoardView = () => {
   const showTicket = ticketId != null;
 
   useEffect(() => {
-    if (board == null) {
-      dispatch(fetchBoard(boardId));
-    }
+    dispatch(fetchBoard(boardId));
     if (![RequestStatus.IN_PROGRESS].includes(ticketStatus)) {
       dispatch(fetchTicketsList(boardId));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [board, boardId])
+  }, [boardId])
 
   if (board == null) {
     return null;
   }
 
-  const columns = board.columns;
+  if (board?.error) {
+    return <>{board.errorMessage}</>
+  }
+
+  const columns = board.columns || [];
   const columnLength = Math.max(Math.min(100 / columns.length, 25), 40);
 
   const onClickCreateTicket = () => {

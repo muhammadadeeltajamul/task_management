@@ -4,9 +4,10 @@ import {
   Alert, Box, Button, FormControl, FormLabel, Modal, Snackbar,
   TextField, Typography,
 } from '@mui/material';
-import { selectNewBoardStatus } from './data/selectors';
+import { selectBoardApiStatus } from './data/selectors';
 import { createNewBoard } from './data/thunks';
 import { RequestStatus } from '../constant';
+import { updateApiRequestStatus } from './data/slices';
 
 const style = {
   position: 'absolute',
@@ -24,7 +25,7 @@ const style = {
   
 const NewBoardForm = ({ open, setOpened }) => {
   const dispatch = useDispatch();
-  const newBoardStatus = useSelector(selectNewBoardStatus);
+  const newBoardStatus = useSelector(selectBoardApiStatus("createBoard")).status;
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -45,14 +46,18 @@ const NewBoardForm = ({ open, setOpened }) => {
   const onSubmitCreateBoardForm = (event) => {
     event.preventDefault();
     dispatch(createNewBoard(formData.name, formData.description));
-    setOpened(false);
-    setFormData({name: '', description: ''});
   };
 
   useEffect(() => {
     if (![RequestStatus.INITIAL, RequestStatus.IN_PROGRESS].includes(newBoardStatus)) {
        setSnackBarOpen(true);
     }
+    if (newBoardStatus === RequestStatus.SUCCESSFUL) {
+      setOpened(false);
+      setFormData({name: '', description: ''});
+      dispatch(updateApiRequestStatus({ name: "createBoard", status: RequestStatus.INITIAL }));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newBoardStatus])
 
   const fields = [
@@ -97,7 +102,14 @@ const NewBoardForm = ({ open, setOpened }) => {
                 )
               )
             }
-            <Button type="submit" variant="contained" className='w-100 mt-2r'>Create Board</Button>
+            <Button
+              type="submit"
+              variant="contained"
+              className='w-100 mt-2r'
+              disabled={newBoardStatus === RequestStatus.IN_PROGRESS}
+            >
+              Create Board
+            </Button>
           </form>
         </Box>
       </Modal>
