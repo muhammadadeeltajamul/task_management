@@ -1,7 +1,9 @@
 from django.db.models import TextChoices
-
+from django.core.exceptions import PermissionDenied
 
 class Actions:
+    VIEW_BOARD = "view_board"
+
     READ_TICKET = "read_ticket"
     READ_COMMENTS = "read_comments"
     COMMENT = "comment"
@@ -28,13 +30,19 @@ def is_valid_access_level(access_level):
 def get_allowed_actions(permission_level):
     mapping = {
         BoardAccess.NO_ACCESS: [],
-        BoardAccess.VIEW_ONLY: [],
-        BoardAccess.VIEW_AND_COMMENT: [],
-        BoardAccess.EDITOR: [],
-        BoardAccess.OWNER: [],
+        BoardAccess.VIEW_ONLY: [Actions.VIEW_BOARD],
+        BoardAccess.VIEW_AND_COMMENT: [Actions.VIEW_BOARD],
+        BoardAccess.EDITOR: [Actions.VIEW_BOARD],
+        BoardAccess.OWNER: [Actions.VIEW_BOARD],
     }
     return mapping[permission_level]
 
 
-def check_permission(action, permission_level):
-    return action in get_allowed_actions(permission_level)
+def check_permission(action, permission_level, raise_exception=True):
+    """
+    Raises django.core.exceptions.PermissionDenied error
+    """
+    allowed = action in get_allowed_actions(permission_level)
+    if not allowed and raise_exception:
+        raise PermissionDenied(f"You don't have access to perform action {action}")
+    return allowed

@@ -6,7 +6,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from board.board_access import BoardAccess, is_valid_access_level
+from board.board_access import (
+    Actions, BoardAccess, is_valid_access_level, check_permission
+)
 from board.models import Board, BoardUsers
 from board.serializers import BoardSerializer, BoardUsersSerializer
 
@@ -51,8 +53,7 @@ class BoardViewSet(ModelViewSet):
         board_id = kwargs['pk']
         instance = Board.objects.get(id=board_id)
         board_user = get_object_or_404(BoardUsers, user=request.user, board=instance)
-        if board_user.access_level == BoardAccess.NO_ACCESS:
-            raise PermissionError("You don't have access to board")
+        check_permission(Actions.VIEW_BOARD, board_user.access_level)
         serializer = self.get_serializer(instance, context={'user': request.user})
         return Response(serializer.data)
 
@@ -76,7 +77,6 @@ class BoardViewSet(ModelViewSet):
             board_users = BoardUsers.objects.filter(board=board)
             return Response(BoardUsersSerializer(board_users, many=True).data)
 
-        print(request.data)
         new_access_level = request.data.get("access_level")
         email = request.data.get("email")
         if not is_valid_access_level(new_access_level):
