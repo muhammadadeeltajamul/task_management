@@ -80,6 +80,7 @@ class BoardViewSet(ModelViewSet):
             board_users = BoardUsers.objects.filter(board=board)
             return Response(BoardUsersSerializer(board_users, many=True).data)
 
+        check_permission_for_user(Actions.UPDATE_MEMBERS, request.user, pk)
         new_access_level = request.data.get("access_level")
         email = request.data.get("email")
         if not is_valid_access_level(new_access_level):
