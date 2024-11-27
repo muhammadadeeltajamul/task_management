@@ -7,7 +7,7 @@ import ManageBoard from './ManageBoard';
 import { selectBoard, selectBoardAccesslevel } from './data/selectors';
 import { fetchBoard } from './data/thunks';
 import { selectTicketList, selectTicketRequestStatus } from '../tickets/data/selectors';
-import { AccessLevel, RequestStatus } from '../constant';
+import { AccessLevel, Actions, RequestStatus } from '../constant';
 import { fetchTicketsList } from '../tickets/data/thunks';
 import Ticket from '../tickets/Ticket';
 import TicketContainer from '../tickets/TicketContainer';
@@ -55,6 +55,7 @@ const BoardView = () => {
     }
 
   }
+  console.log("BOARDD  ", board?.permissions);
   return (
     <>
       { showTicket && <Ticket ticketId={ticketId} /> }
@@ -69,10 +70,17 @@ const BoardView = () => {
             )
           }
           {
-            accessLevel === AccessLevel.OWNER && (
-              <Button className='mr-1r' onClick={() => setOpenBoardMembers(true)}>
-                Members
-              </Button>
+            board?.permissions?.includes(Actions.VIEW_MEMBERS) && (
+              <>
+                <Button className='mr-1r' onClick={() => setOpenBoardMembers(true)}>
+                  Members
+                </Button>
+                <BoardMembers
+                  boardId={boardId}
+                  open={openBoardMembers}
+                  setOpened={setOpenBoardMembers}
+                />
+              </>
             )
           }
           <Button className='mr-1r' onClick={() => setOpenManageBoard(true)}>
@@ -120,11 +128,6 @@ const BoardView = () => {
         boardId={boardId}
         open={openManageBoard}
         setOpened={setOpenManageBoard}
-      />
-      <BoardMembers
-        boardId={boardId}
-        open={openBoardMembers}
-        setOpened={setOpenBoardMembers}
       />
       <CreateTicket
         open={openTicketModal}

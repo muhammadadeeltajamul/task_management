@@ -76,6 +76,7 @@ class BoardViewSet(ModelViewSet):
     def access(self, request, pk):
         if request.method == "GET":
             board = get_object_or_404(Board,pk=pk)
+            check_permission_for_user(Actions.VIEW_MEMBERS, request.user, board.id)
             board_users = BoardUsers.objects.filter(board=board)
             return Response(BoardUsersSerializer(board_users, many=True).data)
 
