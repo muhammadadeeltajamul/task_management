@@ -27,4 +27,5 @@ export const Actions = {
   VIEW_BOARD: "view_board",
   UPDATE_BOARD: "update_board",
   VIEW_MEMBERS: "view_members",
-}
+  UPDATE_MEMBERS: "update_members",
+};

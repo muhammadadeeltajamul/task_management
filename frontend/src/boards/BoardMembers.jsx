@@ -6,8 +6,8 @@ import {
   Modal, Snackbar, TextField, Typography
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { AccessLevel, RequestStatus } from '../constant';
-import { selectBoardApiStatus, selectBoardMembers } from './data/selectors';
+import { AccessLevel, Actions, RequestStatus } from '../constant';
+import { selectBoard, selectBoardApiStatus, selectBoardMembers } from './data/selectors';
 import { fetchMembersList, updateUserBoardAccess } from './data/thunks';
 
 const style = {
@@ -26,6 +26,7 @@ const style = {
 
 const BoardMembers = ({ boardId, open, setOpened }) => {
   const dispatch = useDispatch();
+  const board = useSelector(selectBoard(boardId));
   const members = useSelector(selectBoardMembers(boardId));
   const accessStatusName = "updateBoardAccessStatus";
   const updateAccessStatus = useSelector(selectBoardApiStatus(accessStatusName)).status;
@@ -33,6 +34,8 @@ const BoardMembers = ({ boardId, open, setOpened }) => {
   const [usernameText, setUsernameText] = useState('');
   const [addNewUserPermission, setAddNewUserPermission] = useState('VIEW_ONLY');
   const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const canUpdateMembers = board?.permissions?.includes(Actions.UPDATE_MEMBERS);
+  const TextComponent = canUpdateMembers ? Button : Typography
 
   useEffect(() => {
     if (open) {
@@ -94,7 +97,7 @@ const BoardMembers = ({ boardId, open, setOpened }) => {
                   className='d-flex align-items-center' key={`${element.id}-${index}`}
                   sx={{
                     backgroundColor: index % 2 === 0 ? '#ece4f0' : '#e5f7f0',
-                    padding: '0.5rem',
+                    padding: canUpdateMembers ? '0.5rem' : '0.5rem 1.5rem 0.5rem 0.5rem',
                     marginBottom: '0.5rem',
                     borderRadius: '8px',
                     cursor: 'move',
@@ -105,83 +108,91 @@ const BoardMembers = ({ boardId, open, setOpened }) => {
                     <Typography>{element.user}</Typography>
                   </Box>
                   <Box>
-                    <Button
+                    <TextComponent
                       aria-controls={`menu-${element.user}`}
+                      sx={{ textTransform: 'uppercase' }}
                       aria-haspopup="true"
                       onClick={(event) => handleClick(element.user, event)}
                     >
                       {element.accessLevel}
-                    </Button>
-                    <Menu
-                      id={`menu-${element.user}`}
-                      anchorEl={menuStates[element.user]}
-                      open={Boolean(menuStates[element.user])}
-                      onClose={() => handleClose(element.user)}
-                    >
-                      {
-                        Object.keys(AccessLevel).map((key, idx) => (
-                          <MenuItem
-                            key={`${element.user}-${index}-${idx}`}
-                            onClick={() => onClickMenuItem(element.user, key)}
-                          >
-                            {key}
-                          </MenuItem>
-                        ))
-                      }
-                    </Menu>
+                    </TextComponent>
+                    {
+                      canUpdateMembers && (
+                        <Menu
+                          id={`menu-${element.user}`}
+                          anchorEl={menuStates[element.user]}
+                          open={Boolean(menuStates[element.user])}
+                          onClose={() => handleClose(element.user)}
+                        >
+                          {
+                            Object.keys(AccessLevel).map((key, idx) => (
+                              <MenuItem
+                                key={`${element.user}-${index}-${idx}`}
+                                onClick={() => onClickMenuItem(element.user, key)}
+                              >
+                                {key}
+                              </MenuItem>
+                            ))
+                          }
+                        </Menu>  
+                      )
+                    }
                   </Box>
                 </Box>
               ))
             }
-            <Box className='d-flex'>
-              <TextField
-                className="w-100 mr-1r"
-                value={usernameText}
-                onChange={(e) => setUsernameText(e.target.value)}
-                sx={{
-                  flexGrow: 1,
-                  marginRight: '0.5rem',
-                }}
-              />
-              <Button
-                aria-controls='menu-add-new'
-                aria-haspopup="true"
-                className='px-1r ml-1r'
-                onClick={(event) => handleClick('menu-add-new', event)}
-              >
-                {addNewUserPermission}
-              </Button>
-              <Menu
-                id='menu-add-new'
-                anchorEl={menuStates['menu-add-new']}
-                open={Boolean(menuStates['menu-add-new'])}
-                onClose={() => handleClose('menu-add-new')}
-              >
-                {
-                  Object.keys(AccessLevel).map((key, idx) => (
-                    <MenuItem
-                      key={`menu-add-new-${idx}`}
-                      onClick={() => onChangeNewUserPermission(key)}
-                    >
-                      {key}
-                    </MenuItem>
-                  ))
-                }
-              </Menu>
-              <Avatar
-                className="bg-transparent color-green my-auto mx-1r"
-                onClick={onClickAddNewPermission}
-                style={{
-                  cursor: 'pointer',
-                  transition: 'transform 0.3s ease',
-                  '&:hover': {
-                    transform: 'scale(1.2)',
-                  },
-                }}
-              >
-                <AddIcon />
-              </Avatar>
-            </Box>
+            {
+              canUpdateMembers && (
+                <Box className='d-flex'>
+                <TextField
+                  className="w-100 mr-1r"
+                  value={usernameText}
+                  onChange={(e) => setUsernameText(e.target.value)}
+                  sx={{
+                    flexGrow: 1,
+                    marginRight: '0.5rem',
+                  }}
+                />
+                <Button
+                  aria-controls='menu-add-new'
+                  aria-haspopup="true"
+                  className='px-1r ml-1r'
+                  onClick={(event) => handleClick('menu-add-new', event)}
+                >
+                  {addNewUserPermission}
+                </Button>
+                <Menu
+                  id='menu-add-new'
+                  anchorEl={menuStates['menu-add-new']}
+                  open={Boolean(menuStates['menu-add-new'])}
+                  onClose={() => handleClose('menu-add-new')}
+                >
+                  {
+                    Object.keys(AccessLevel).map((key, idx) => (
+                      <MenuItem
+                        key={`menu-add-new-${idx}`}
+                        onClick={() => onChangeNewUserPermission(key)}
+                      >
+                        {key}
+                      </MenuItem>
+                    ))
+                  }
+                </Menu>
+                <Avatar
+                  className="bg-transparent color-green my-auto mx-1r"
+                  onClick={onClickAddNewPermission}
+                  style={{
+                    cursor: 'pointer',
+                    transition: 'transform 0.3s ease',
+                    '&:hover': {
+                      transform: 'scale(1.2)',
+                    },
+                  }}
+                >
+                  <AddIcon />
+                </Avatar>
+              </Box>
+            )}
           </Box>
         </Box>
       </Modal>
