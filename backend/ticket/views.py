@@ -4,6 +4,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from board.utils import check_permission_for_user
+from board.board_access import Actions
 from ticket.models import Ticket
 from ticket.serializers import TicketSerializer
 
@@ -35,6 +37,7 @@ class TicketViewSet(ModelViewSet):
         column_name = request.data.get("column_name")
         if not column_name:
             raise Exception("column_name is required")
+        check_permission_for_user(Actions.CREATE_TICKET, request.user, board_id)
         params = {
             'title': title,
             'description': request.data.get("description", ""),

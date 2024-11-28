@@ -7,12 +7,12 @@ class Actions:
     UPDATE_BOARD = "update_board"
     VIEW_MEMBERS = "view_members"
     UPDATE_MEMBERS = "update_members"
+    CREATE_TICKET = "create_ticket"
 
     READ_TICKET = "read_ticket"
     READ_COMMENTS = "read_comments"
     COMMENT = "comment"
     EDIT_TICKET = "edit_ticket"
-    CREATE_TICKET = "create_ticket"
     CHANGE_BOARD = "change_board"
 
 
@@ -38,11 +38,11 @@ def get_allowed_actions(permission_level):
         BoardAccess.VIEW_AND_COMMENT: [Actions.VIEW_BOARD],
         BoardAccess.EDITOR: [
             Actions.VIEW_BOARD, Actions.UPDATE_BOARD, Actions.VIEW_MEMBERS,
-            Actions.UPDATE_MEMBERS,
+            Actions.UPDATE_MEMBERS, Actions.CREATE_TICKET,
         ],
         BoardAccess.OWNER: [
             Actions.VIEW_BOARD, Actions.UPDATE_BOARD, Actions.VIEW_MEMBERS,
-            Actions.UPDATE_MEMBERS,
+            Actions.UPDATE_MEMBERS, Actions.CREATE_TICKET,
         ],
     }
     return mapping[permission_level]
