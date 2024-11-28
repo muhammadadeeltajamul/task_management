@@ -4,10 +4,10 @@ import { useLocation, useParams } from 'react-router-dom';
 import { Alert, Box, Button, CircularProgress, Grid2, Paper, Snackbar, Typography } from '@mui/material';
 import BoardMembers from './BoardMembers';
 import ManageBoard from './ManageBoard';
-import { selectBoard, selectBoardAccesslevel } from './data/selectors';
+import { selectBoard } from './data/selectors';
 import { fetchBoard } from './data/thunks';
 import { selectTicketList, selectTicketRequestStatus } from '../tickets/data/selectors';
-import { AccessLevel, Actions, RequestStatus } from '../constant';
+import { Actions, RequestStatus } from '../constant';
 import { fetchTicketsList } from '../tickets/data/thunks';
 import Ticket from '../tickets/Ticket';
 import TicketContainer from '../tickets/TicketContainer';
@@ -24,7 +24,6 @@ const BoardView = () => {
   const board = useSelector(selectBoard(boardId));
   const ticketStatus = useSelector(selectTicketRequestStatus('fetchTickets')).status;
   const tickets = useSelector(selectTicketList(boardId));
-  const accessLevel = useSelector(selectBoardAccesslevel(boardId));
   const ticketId = new URLSearchParams(location.search).get('ticketId');
   const showTicket = ticketId != null;
 
@@ -55,7 +54,6 @@ const BoardView = () => {
     }
 
   }
-  console.log("BOARDD  ", board?.permissions);
   return (
     <>
       { showTicket && <Ticket ticketId={ticketId} /> }
@@ -63,10 +61,16 @@ const BoardView = () => {
         <Box className='d-flex flex-row mb-1r'>
           <Typography variant="h6" className='ml-1r mr-auto'>{board.name}</Typography>
           {
-            accessLevel === AccessLevel.OWNER && (
-              <Button className='ml-auto mr-1r' onClick={onClickCreateTicket}>
-                Create Ticket
-              </Button>
+            board?.permissions?.includes(Actions.CREATE_TICKET) && (
+              <>
+                <Button className='ml-auto mr-1r' onClick={onClickCreateTicket}>
+                  Create Ticket
+                </Button>
+                <CreateTicket
+                  open={openTicketModal}
+                  setOpened={setOpenTicketModal}
+                />
+              </>
             )
           }
           {
@@ -128,10 +132,6 @@ const BoardView = () => {
         boardId={boardId}
         open={openManageBoard}
         setOpened={setOpenManageBoard}
-      />
-      <CreateTicket
-        open={openTicketModal}
-        setOpened={setOpenTicketModal}
       />
       <Snackbar
         open={snackBarData.open}
