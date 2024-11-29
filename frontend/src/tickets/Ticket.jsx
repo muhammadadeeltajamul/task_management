@@ -8,7 +8,7 @@ import EditableTextField from '../components/EditableTextField';
 import { setTicketRequestStatus } from './data/slices';
 import { fetchUpdateTicket } from './data/thunks';
 import { fetchMembersList } from '../boards/data/thunks';
-import { AccessLevel, RequestStatus } from '../constant';
+import { AccessLevel, Actions, RequestStatus } from '../constant';
 import Comments from '../comments/Comments';
 
 const style = {
@@ -46,6 +46,7 @@ const Ticket = ({ ticketId }) => {
     assignedTo: {anchor: null, opened: false},
     columnName: {anchor: null, opened: false},
   });
+  const canUpdateTicket = board?.permissions?.includes(Actions.UPDATE_TICKET);
 
   useEffect(() => {
     if ([RequestStatus.INITIAL, RequestStatus.DENIED, RequestStatus.FAILED].includes(memberStatus)) {
@@ -102,7 +103,7 @@ const Ticket = ({ ticketId }) => {
 
   const onTicketAttributeChange = (newText, key) => {
     if (key === "assigned_to" && newText === "Unassigned") { newText = null; }
-    dispatch(fetchUpdateTicket(ticketId, key, newText));
+    dispatch(fetchUpdateTicket(boardId, ticketId, key, newText));
     onClickClose();
   }
 
@@ -119,11 +120,13 @@ const Ticket = ({ ticketId }) => {
           </Box>
           <Box className='d-flex flex-column px-1r'>
             <EditableTextField
+              editable={canUpdateTicket}
               value={ticket.title}
               onSave={(value) => onTicketAttributeChange(value, 'title')}
               textProps={{ variant: 'h5', className: 'my-auto text-lines-1 border-black border-2px font-weight-700' }}
             />
             <EditableTextField
+              editable={canUpdateTicket}
               props={{ className: 'd-flex align-items-center mt-1r' }}
               value={ticket.description}
               onSave={(value) => onTicketAttributeChange(value, 'description')}

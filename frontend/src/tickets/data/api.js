@@ -19,9 +19,9 @@ export const postNewTicket = async(boardId, title, description, columnName) => {
   return camelCaseObject(data);
 };
 
-export const patchTicketData = async(ticketId, key, value) => {
+export const patchTicketData = async(boardId, ticketId, key, value) => {
   const { data } = await sendPatchRequest(
-    createUrl(`ticket/${ticketId}`),
+    createUrl(`ticket/${ticketId}?board_id=${boardId}`),
     snakeCaseObject({ key, value }),
   )
   return camelCaseObject(data);

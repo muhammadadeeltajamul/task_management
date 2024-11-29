@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 
-const EditableTextField = ({ value, onSave=(event) => {}, props={}, textProps={}, inputProps={} }) => {
+const EditableTextField = ({ value, onSave=(event) => {}, props={}, textProps={}, inputProps={}, editable=true }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [textValue, setTextValue] = useState(value);
 
@@ -16,6 +16,14 @@ const EditableTextField = ({ value, onSave=(event) => {}, props={}, textProps={}
     onSave(textValue);
     setIsEditing(false);
   };
+
+  const onClickEditIcon = () => {
+    if (!editable) {
+      return;
+    }
+    setIsEditing(true);
+  }
+
   return (
     <>
       <Box className="d-flex align-items-center" {...props}>
@@ -37,9 +45,13 @@ const EditableTextField = ({ value, onSave=(event) => {}, props={}, textProps={}
               </>
             : <>
                 <Typography {...textProps}>{value}</Typography>
-                <Avatar className="bg-transparent color-black" onClick={() => setIsEditing(true)}>
-                  <EditIcon />
-                </Avatar>
+                {
+                  editable && (
+                    <Avatar className="bg-transparent color-black" onClick={onClickEditIcon}>
+                      <EditIcon />
+                    </Avatar>
+                  )
+                }
               </>
         }
       </Box>

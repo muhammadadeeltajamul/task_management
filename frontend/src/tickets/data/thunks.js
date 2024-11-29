@@ -42,12 +42,12 @@ export const createNewTicket = (boardId, title, description, columnName) => (
   }
 );  
 
-export const fetchUpdateTicket = (ticketId, key, value) => (
+export const fetchUpdateTicket = (boardId, ticketId, key, value) => (
   async (dispatch) => {
     const callName = 'updateTicket';
     try {
       dispatch(setTicketRequestStatus({name: callName, status: RequestStatus.IN_PROGRESS}));
-      await patchTicketData(ticketId, key, value);
+      await patchTicketData(boardId, ticketId, key, value);
       dispatch(updateTicket({id: ticketId, key: camelCase(key), value}));
       dispatch(setTicketRequestStatus({name: callName, status: RequestStatus.SUCCESSFUL}));
     } catch(error) {
