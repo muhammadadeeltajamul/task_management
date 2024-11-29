@@ -8,8 +8,8 @@ class Actions:
     VIEW_MEMBERS = "view_members"
     UPDATE_MEMBERS = "update_members"
     CREATE_TICKET = "create_ticket"
+    VIEW_TICKET = "view_ticket"
 
-    READ_TICKET = "read_ticket"
     READ_COMMENTS = "read_comments"
     COMMENT = "comment"
     EDIT_TICKET = "edit_ticket"
@@ -34,15 +34,15 @@ def is_valid_access_level(access_level):
 def get_allowed_actions(permission_level):
     mapping = {
         BoardAccess.NO_ACCESS: [],
-        BoardAccess.VIEW_ONLY: [Actions.VIEW_BOARD],
-        BoardAccess.VIEW_AND_COMMENT: [Actions.VIEW_BOARD],
+        BoardAccess.VIEW_ONLY: [Actions.VIEW_BOARD, Actions.VIEW_TICKET],
+        BoardAccess.VIEW_AND_COMMENT: [Actions.VIEW_BOARD, Actions.VIEW_TICKET],
         BoardAccess.EDITOR: [
             Actions.VIEW_BOARD, Actions.UPDATE_BOARD, Actions.VIEW_MEMBERS,
-            Actions.UPDATE_MEMBERS, Actions.CREATE_TICKET,
+            Actions.UPDATE_MEMBERS, Actions.CREATE_TICKET, Actions.VIEW_TICKET
         ],
         BoardAccess.OWNER: [
             Actions.VIEW_BOARD, Actions.UPDATE_BOARD, Actions.VIEW_MEMBERS,
-            Actions.UPDATE_MEMBERS, Actions.CREATE_TICKET,
+            Actions.UPDATE_MEMBERS, Actions.CREATE_TICKET, Actions.VIEW_TICKET
         ],
     }
     return mapping[permission_level]
