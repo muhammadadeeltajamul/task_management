@@ -9,6 +9,7 @@ import {
 import { selectBoardColumns } from '../boards/data/selectors';
 import { RequestStatus } from '../constant';
 import { selectTicketRequestStatus } from './data/selectors';
+import { setTicketRequestStatus } from './data/slices';
 import { createNewTicket } from './data/thunks';
 
 const style = {
@@ -44,6 +45,11 @@ const CreateTicket = ({ open, setOpened }) => {
     if (![RequestStatus.INITIAL, RequestStatus.IN_PROGRESS].includes(newTicketStatus)) {
       setSnackBarOpen(true);
     }
+    if (newTicketStatus === RequestStatus.SUCCESSFUL) {
+      setOpened(false);
+      setFormData({name: '', description: '', columnName: columnsList[0] || ' '});
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newTicketStatus])
 
   const handleChange = (event) => {
@@ -80,13 +86,16 @@ const CreateTicket = ({ open, setOpened }) => {
   const onSubmitCreateTicketForm = (event) => {
     event.preventDefault();
     dispatch(createNewTicket(boardId, formData.title, formData.description, formData.columnName));
-    setOpened(false);
-    setFormData({name: '', description: '', columnName: columnsList[0] || ' '});
   };
 
   const onSelectMenuItem = (fieldName, columnName) => {
     setFormData({ ...formData, [fieldName]: columnName });
     setMenuOpened({ ...menuOpened, [fieldName]: false });
+  };
+
+  const onCloseSnackBar = () => {
+    setSnackBarOpen(false);
+    dispatch(setTicketRequestStatus({ name: requestName, status: RequestStatus.INITIAL }));
   };
 
   const fields = [
@@ -184,14 +193,21 @@ const CreateTicket = ({ open, setOpened }) => {
                 )
               )
             }
-            <Button type="submit" variant="contained" className='w-100 mt-2r'>Create Ticket</Button>
+            <Button
+              type="submit"
+              disabled={newTicketStatus === RequestStatus.IN_PROGRESS}
+              variant="contained"
+              className='w-100 mt-2r'
+            >
+              Create Ticket
+            </Button>
           </form>
         </Box>
       </Modal>
       <Snackbar
         open={snackBarOpen}
         autoHideDuration={3000}
-        onClose={() => setSnackBarOpen(false)}
+        onClose={onCloseSnackBar}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert

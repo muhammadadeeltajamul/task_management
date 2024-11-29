@@ -27,9 +27,10 @@ export const createNewTicket = (boardId, title, description, columnName) => (
   async (dispatch) => {
     const callName = 'createTicket';
     try {
-      dispatch(setTicketRequestStatus({name: callName, status: RequestStatus.IN_PROGRESS}));
+      dispatch(setTicketRequestStatus({ name: callName, status: RequestStatus.IN_PROGRESS }));
       const data = await postNewTicket(boardId, title, description, columnName);
       dispatch(addTicket(data));
+      dispatch(setTicketRequestStatus({ name: callName, status: RequestStatus.SUCCESSFUL }));
     } catch(error) {
       const status = [401, 403].includes(error?.response?.status) ? RequestStatus.DENIED : RequestStatus.FAILED;
       dispatch(setTicketRequestStatus({
