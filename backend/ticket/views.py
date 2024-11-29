@@ -29,6 +29,11 @@ class TicketViewSet(ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def retrieve(self, request, *args, **kwargs):
+        board_id = self.request.GET.get('board_id')
+        check_permission_for_user(Actions.VIEW_TICKET, request.user, board_id)
+        return super().retrieve(request, *args, **kwargs)
+
     def create(self, request):
         title = request.data.get("title")
         if not title:
