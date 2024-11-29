@@ -57,6 +57,8 @@ class TicketViewSet(ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def partial_update(self, request, pk):
+        board_id = self.request.GET.get('board_id')
+        check_permission_for_user(Actions.UPDATE_TICKET, request.user, board_id)
         key = request.data.get("key")
         value = request.data.get("value")
         if key == "assigned_to":
