@@ -2,12 +2,12 @@ import { RequestStatus } from "../../constant";
 import { getCommentsList, patchComment, postComment } from "./api";
 import { addComment, setCommentsAPIStatus, updateComment, updateCommentsList } from "./slices";
 
-export const fetchCommentsList = (ticketId) => (
+export const fetchCommentsList = (boardId, ticketId) => (
   async (dispatch) => {
     const stateName = "fetchTicketComments";
     try {
       dispatch(setCommentsAPIStatus({ name: stateName, status: RequestStatus.IN_PROGRESS}));
-      const data = await getCommentsList(ticketId);
+      const data = await getCommentsList(boardId, ticketId);
       dispatch(updateCommentsList(data));
       dispatch(setCommentsAPIStatus({ name: stateName, status: RequestStatus.SUCCESSFUL}));
     } catch (error) {

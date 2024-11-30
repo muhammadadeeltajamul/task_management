@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { Avatar, Box, Paper, Typography } from '@mui/material';
 import { selectCommentsList } from './data/selectors';
 import { fetchCommentsList, updateCommentData } from './data/thunks';
@@ -9,10 +10,11 @@ import CreateComment from './CreateComment';
 
 const Comments = ({ ticketId }) => {
   const dispatch = useDispatch();
+  const { boardId } = useParams();
   const comments = useSelector(selectCommentsList);
   const userEmail = useSelector(selectUserEmail);
   useEffect(() => {
-    dispatch(fetchCommentsList(ticketId));
+    dispatch(fetchCommentsList(boardId, ticketId));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ticketId]);
 

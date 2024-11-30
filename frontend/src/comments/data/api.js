@@ -3,9 +3,9 @@ import {
   sendPatchRequest, sendPostRequest,
 } from "../../utils";
   
-export const getCommentsList = async(ticketId) => {
+export const getCommentsList = async(boardId, ticketId) => {
   const { data } = await sendGetRequest(
-    createUrl(`comment/?ticket_id=${ticketId}`),
+    createUrl(`comment/?ticket_id=${ticketId}&board_id=${boardId}`),
   )
   return camelCaseObject(data);
 };

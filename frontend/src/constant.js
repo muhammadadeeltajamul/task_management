@@ -31,4 +31,5 @@ export const Actions = {
   CREATE_TICKET: "create_ticket",
   VIEW_TICKET: "view_ticket",
   UPDATE_TICKET: "update_ticket",
+  VIEW_COMMENTS: "view_comments",
 };
