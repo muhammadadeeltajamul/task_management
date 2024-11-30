@@ -2,8 +2,11 @@ from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from board.board_access import Actions
+from board.utils import check_permission_for_user
 from comment.models import Comments
 from comment.serializers import CommentsSerializer
+from ticket.models import Ticket
 
 
 class CommentsViewSet(ModelViewSet):
@@ -13,9 +16,14 @@ class CommentsViewSet(ModelViewSet):
         return Comments.objects.all()
 
     def list(self, request, *args, **kwargs):
+        board_id = request.GET.get("board_id")
         ticket_id = request.GET.get("ticket_id")
         if not ticket_id:
             raise ValidationError("Invalid ticket id")
+        check_permission_for_user(Actions.VIEW_COMMENTS, request.user, board_id)
+        ticket = Ticket.objects.get(id=ticket_id)
+        if str(ticket.board_id) != board_id:
+            raise ValidationError("Ticket doesn't exist in board")
         queryset = self.get_queryset().filter(ticket_id=ticket_id)
         page = self.paginate_queryset(queryset)
         if page is not None:
