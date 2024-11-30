@@ -46,6 +46,9 @@ class CommentsViewSet(ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
+    def retrieve(self, request, *args, **kwargs):
+        raise NotImplementedError("Get request not allowed")
+
     def create(self, request):
         ticket_id = request.GET.get("ticket_id")
         if not ticket_id:
