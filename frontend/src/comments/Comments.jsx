@@ -5,7 +5,9 @@ import { Avatar, Box, Paper, Typography } from '@mui/material';
 import { selectCommentsList } from './data/selectors';
 import { fetchCommentsList, updateCommentData } from './data/thunks';
 import { selectUserEmail } from '../authentication/data/selectors';
+import { selectBoard } from '../boards/data/selectors';
 import EditableTextField from '../components/EditableTextField';
+import { Actions } from '../constant';
 import CreateComment from './CreateComment';
 
 const Comments = ({ ticketId }) => {
@@ -13,8 +15,12 @@ const Comments = ({ ticketId }) => {
   const { boardId } = useParams();
   const comments = useSelector(selectCommentsList);
   const userEmail = useSelector(selectUserEmail);
+  const board = useSelector(selectBoard(boardId));
+
   useEffect(() => {
-    dispatch(fetchCommentsList(boardId, ticketId));
+    if (board?.permissions?.includes(Actions.VIEW_COMMENTS)) {
+      dispatch(fetchCommentsList(boardId, ticketId));
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ticketId]);
 
