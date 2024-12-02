@@ -32,12 +32,12 @@ export const updateCommentData = (commentId, updatedData) => (
   }
 );
 
-export const addNewComment = (ticketId, description) => (
+export const addNewComment = (boardId, ticketId, description) => (
   async (dispatch) => {
     const stateName = "createComment";
     try {
       dispatch(setCommentsAPIStatus({ name: stateName, status: RequestStatus.IN_PROGRESS}));
-      const data = await postComment(ticketId, description);
+      const data = await postComment(boardId, ticketId, description);
       dispatch(addComment(data));
       dispatch(setCommentsAPIStatus({ name: stateName, status: RequestStatus.SUCCESSFUL}));
     } catch (error) {

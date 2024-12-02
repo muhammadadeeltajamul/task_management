@@ -1,20 +1,28 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import { Avatar, TextField } from '@mui/material';
+import { selectBoard } from '../boards/data/selectors';
+import { Actions } from '../constant';
 import { addNewComment } from './data/thunks';
 
 const CreateComment = ({ ticketId }) => {
   const dispatch = useDispatch();
+  const { boardId } = useParams();
+  const board = useSelector(selectBoard(boardId));
   const [text, setText] = useState("");
 
   const onClickCreateComment = () => {
     const description = text.trim()
     if (description !== "") {
-      dispatch(addNewComment(ticketId, description));
+      dispatch(addNewComment(boardId, ticketId, description));
     }
   };
 
+  if (!board?.permissions?.includes(Actions.CREATE_COMMENT)) {
+    return null;
+  }
   return (
     <>
       <TextField

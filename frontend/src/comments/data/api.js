@@ -18,9 +18,9 @@ export const patchComment = async(commentId, updatedData) => {
   return camelCaseObject(data);
 };
 
-export const postComment = async(ticketId, description) => {
+export const postComment = async(boardId, ticketId, description) => {
   const { data } = await sendPostRequest(
-    createUrl(`comment/?ticket_id=${ticketId}`),
+    createUrl(`comment/?board_id=${boardId}&ticket_id=${ticketId}`),
     { description },
   )
   return camelCaseObject(data);
