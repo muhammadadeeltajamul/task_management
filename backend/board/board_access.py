@@ -11,11 +11,7 @@ class Actions:
     VIEW_TICKET = "view_ticket"
     UPDATE_TICKET = "update_ticket"
     VIEW_COMMENTS = "view_comments"
-
-    READ_COMMENTS = "read_comments"
-    COMMENT = "comment"
-    EDIT_TICKET = "edit_ticket"
-    CHANGE_BOARD = "change_board"
+    CREATE_COMMENT = "create_comment"
 
 
 class BoardAccess(TextChoices):
@@ -40,17 +36,18 @@ def get_allowed_actions(permission_level):
             Actions.VIEW_BOARD, Actions.VIEW_TICKET, Actions.VIEW_COMMENTS
         ],
         BoardAccess.VIEW_AND_COMMENT: [
-            Actions.VIEW_BOARD, Actions.VIEW_TICKET, Actions.VIEW_COMMENTS
+            Actions.VIEW_BOARD, Actions.VIEW_TICKET, Actions.VIEW_COMMENTS,
+            Actions.CREATE_COMMENT
         ],
         BoardAccess.EDITOR: [
             Actions.VIEW_BOARD, Actions.UPDATE_BOARD, Actions.VIEW_MEMBERS,
             Actions.CREATE_TICKET, Actions.VIEW_TICKET, Actions.UPDATE_TICKET,
-            Actions.VIEW_COMMENTS
+            Actions.VIEW_COMMENTS, Actions.CREATE_COMMENT
         ],
         BoardAccess.OWNER: [
             Actions.VIEW_BOARD, Actions.UPDATE_BOARD, Actions.VIEW_MEMBERS,
             Actions.UPDATE_MEMBERS, Actions.CREATE_TICKET, Actions.VIEW_TICKET,
-            Actions.UPDATE_TICKET, Actions.VIEW_COMMENTS
+            Actions.UPDATE_TICKET, Actions.VIEW_COMMENTS, Actions.CREATE_COMMENT
         ],
     }
     return mapping[permission_level]

@@ -56,6 +56,8 @@ class CommentsViewSet(ModelViewSet):
         description = str(request.data.get('description', "")).strip()
         if not description:
             raise ValidationError("Description cannot be empty")
+        board_id = request.GET.get("board_id")
+        check_permission_for_user(Actions.CREATE_COMMENT, request.user, board_id)
         comment = Comments.objects.create(
             author=request.user,
             ticket_id=ticket_id,
