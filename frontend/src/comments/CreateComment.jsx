@@ -6,7 +6,6 @@ import { Avatar, TextField } from '@mui/material';
 import { selectBoard } from '../boards/data/selectors';
 import { Actions, RequestStatus } from '../constant';
 import { selectCommentsAPIStatus } from './data/selectors';
-import { setCommentsAPIStatus } from './data/slices';
 import { addNewComment } from './data/thunks';
 
 const CreateComment = ({ ticketId }) => {
@@ -20,7 +19,6 @@ const CreateComment = ({ ticketId }) => {
   useEffect(() => {
     if (createCommentStatus === RequestStatus.SUCCESSFUL) {
       setText("");
-      dispatch(setCommentsAPIStatus(RequestStatus.INITIAL));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createCommentStatus])

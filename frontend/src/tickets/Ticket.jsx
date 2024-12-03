@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Alert, Box, Button, Menu, MenuItem, Modal, Snackbar } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectTicket, selectTicketRequestStatus } from './data/selectors';
 import { selectBoard, selectBoardApiStatus, selectBoardMembers } from '../boards/data/selectors';
+import { fetchMembersList } from '../boards/data/thunks';
+import Comments from '../comments/Comments';
+import { selectCommentsAPIStatus } from '../comments/data/selectors';
 import EditableTextField from '../components/EditableTextField';
+import { selectTicket, selectTicketRequestStatus } from './data/selectors';
 import { setTicketRequestStatus } from './data/slices';
 import { fetchUpdateTicket } from './data/thunks';
-import { fetchMembersList } from '../boards/data/thunks';
 import { AccessLevel, Actions, RequestStatus } from '../constant';
-import Comments from '../comments/Comments';
+import { setCommentsAPIStatus } from '../comments/data/slices';
 
 const style = {
   position: 'absolute',
@@ -41,6 +43,7 @@ const Ticket = ({ ticketId }) => {
   ];
   const board = useSelector(selectBoard(boardId));
   const ticket = useSelector(selectTicket(ticketId));
+  const createCommentStatus = useSelector(selectCommentsAPIStatus('createComment')).status;
   const [snackbarData, setSnackbarData] = useState({ text: '', opened: false, severity: 'success' });
   const [menuData, setMenuData] = useState({
     assignedTo: {anchor: null, opened: false},
@@ -73,6 +76,25 @@ const Ticket = ({ ticketId }) => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateTicketStatus]);
+
+  useEffect(() => {
+    if (createCommentStatus === RequestStatus.SUCCESSFUL) {
+      setSnackbarData({
+        severity: 'success',
+        text: 'Comment added successfully',
+        opened: true,
+        resetState: 'createComment',
+      });
+    } else if ([RequestStatus.DENIED, RequestStatus.FAILED].includes(createCommentStatus)) {
+      setSnackbarData({
+        severity: 'error',
+        text: 'Unable to add comment',
+        opened: true,
+        resetState: 'createComment',
+      })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createCommentStatus])
 
   const goToBoard = () => {
     if (location.search) {
@@ -107,6 +129,12 @@ const Ticket = ({ ticketId }) => {
     onClickClose();
   }
 
+  const onCloseSnackbar = () => {
+    setSnackbarData({ ...snackbarData, opened: false });
+    if (snackbarData.resetState != null) {
+      dispatch(setCommentsAPIStatus({ name: snackbarData.resetState, status: RequestStatus.INITIAL }));
+    }
+  }
   if (ticket == null) {
     return null;
   }
@@ -207,7 +235,7 @@ const Ticket = ({ ticketId }) => {
       <Snackbar
         open={snackbarData.opened}
         autoHideDuration={3000}
-        onClose={() => setSnackbarData({ ...snackbarData, opened: false })}
+        onClose={onCloseSnackbar}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert
