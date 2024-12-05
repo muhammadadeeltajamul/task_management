@@ -6,6 +6,6 @@ Create and manage your tasks easily and efficiently
 `python manage.py runserver`
 
 ### Start frontend
-`python manage.py runserver`
+`npm start`
 
 
